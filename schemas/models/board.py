@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 from pydantic import BaseModel, Field
 
 from schemas.models.task import Task
-from schemas.models.user import User
+from schemas.models.team_member import User
 
 
 class Board(BaseModel):

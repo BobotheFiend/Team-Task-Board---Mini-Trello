@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field, EmailStr
-from priority import Priority
-from status import Status
+from pydantic import BaseModel, Field
+from schemas.models.enums.priority import Priority
+from schemas.models.enums.status import Status
 
 class ToDo(BaseModel):
 
@@ -16,5 +16,5 @@ class ToDo(BaseModel):
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
     position: Optional[int]
     priority: Priority | None = None
-    progress: Status = Status.IN_PROGRESS
+    progress: Status = Status.PENDING
     due_date: datetime | None = None

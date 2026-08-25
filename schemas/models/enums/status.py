@@ -4,3 +4,4 @@ class Status(Enum):
     COMPLETED = 0
     LATE = 1
     IN_PROGRESS = 2
+    PENDING = 3
