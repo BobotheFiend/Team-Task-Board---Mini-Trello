@@ -15,7 +15,7 @@ class ToDo(SQLModel, table=True):
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
     position: Optional[int] = None
-    assigned_to: int = Field(foreign_key="teammember.id")
+    assigned_to: int = Field(foreign_key="team_member.id")
     priority: Priority | None = Field(default=Priority.MEDIUM)
     progress: Status = Status.PENDING
     due_date: datetime | None = None

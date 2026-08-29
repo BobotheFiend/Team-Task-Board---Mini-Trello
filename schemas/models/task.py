@@ -2,8 +2,6 @@ from datetime import datetime
 from typing import Optional
 from sqlmodel import SQLModel, Field, JSON
 
-from schemas.models.team_member import TeamMember
-from schemas.models.todo import ToDo
 
 
 class Task(SQLModel, table=True):
