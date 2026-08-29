@@ -15,6 +15,6 @@ class TeamMember(SQLModel, table=True):
     name: str
     password: str
     role: Role = Field(default=Role.MEMBER)
-    board_ID: Optional[int] = Field(default=None, foreign_key="board.ID")
+    board_ID: Optional[int] = Field(default=None, foreign_key="board.id")
     is_active: bool = Field(default=False)
 
