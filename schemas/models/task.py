@@ -1,19 +1,17 @@
 from datetime import datetime
 from typing import Optional
-from uuid import UUID, uuid4
-
-from pydantic import BaseModel, Field
+from sqlmodel import SQLModel, Field, JSON
 
 from schemas.models.team_member import TeamMember
 from schemas.models.todo import ToDo
 
 
-class Task(BaseModel):
+class Task(SQLModel, table=True):
 
-    id: Optional[UUID] = Field(default_factory=uuid4)
+    id: Optional[int] = Field(default=None, primary_key=True)
     title: str
-    todos: list[ToDo] | None = None
-    team_members : list[TeamMember]
+    todos: list[ToDo] | None = Field(default=[], sa_type=JSON)
+    team_members : list[str] = Field(default=[], sa_type=JSON)
     due_date: datetime | None = None
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)

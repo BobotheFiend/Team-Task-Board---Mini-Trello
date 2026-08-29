@@ -1,7 +1,7 @@
 from enum import Enum
 
-class Status(Enum):
-    COMPLETED = 0
-    LATE = 1
-    IN_PROGRESS = 2
-    PENDING = 3
+class Status(str, Enum):
+    COMPLETED = "Completed"
+    LATE = "Late"
+    IN_PROGRESS = "In Progress"
+    PENDING = "Pending"
