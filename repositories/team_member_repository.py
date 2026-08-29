@@ -1,24 +1,22 @@
-from typing import Optional, List
-from sqlmodel import Session, select
+from abc import ABC, abstractmethod
+from typing import List
 
 from schemas.models.team_member import TeamMember
 
 
-class TeamMemberRepository:
-    def __init__(self, session: Session):
-        self.session = session
+class TeamMemberRepository(ABC):
+    @abstractmethod
+    def save(self, team_member: TeamMember):
+        ...
 
-    def save(self, member: TeamMember):
-        self.session.add(member)
-        self.session.commit()
-        self.session.refresh(member)
-        return member
+    @abstractmethod
+    def delete(self, team_member: TeamMember):
+        ...
 
-    def find_by_id(self, member_id: str) -> Optional[TeamMember]:
-        return self.session.get(TeamMember, member_id)
+    @abstractmethod
+    def find_by_id(self, team_member_id: TeamMember):
+        ...
 
-    def delete(self, member:TeamMember):
-        self.session.delete(member)
-
+    @abstractmethod
     def view_all(self) -> List[TeamMember]:
-        return self.session.exec(select(TeamMember)).all()
+        ...

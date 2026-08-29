@@ -1,11 +1,11 @@
-import string
+
 from datetime import datetime
 from typing import Optional
 from sqlmodel import SQLModel, Field, JSON
 
 from schemas.models.enums.priority import Priority
 from schemas.models.enums.status import Status
-from schemas.models.team_member import TeamMember
+
 
 
 class ToDo(SQLModel, table=True):
@@ -19,4 +19,4 @@ class ToDo(SQLModel, table=True):
     priority: Priority | None = Field(default=Priority.MEDIUM)
     progress: Status = Status.PENDING
     due_date: datetime | None = None
-    task_id: Optional[int] = Field(foreign_key="task.id")
+    task_id: int = Field(foreign_key="task.id")
