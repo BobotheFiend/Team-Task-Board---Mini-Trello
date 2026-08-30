@@ -14,7 +14,7 @@ class TeamMemberRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_id(self, team_member_id: TeamMember):
+    def find_by_id(self, team_member_id: int):
         ...
 
     @abstractmethod

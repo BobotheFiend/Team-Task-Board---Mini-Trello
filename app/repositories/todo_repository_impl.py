@@ -18,7 +18,7 @@ class TodoRepositoryImpl(TodoRepository):
         self.session.refresh(todo)
         return todo
 
-    def find_by_id(self, todo_id: str) -> Optional[Todo]:
+    def find_by_id(self, todo_id: int) -> Optional[Todo]:
         return self.session.get(Todo, todo_id)
 
     def delete(self, member:Todo):

@@ -19,7 +19,7 @@ class TeamMemberRepositoryImpl(TeamMemberRepository):
         self.session.refresh(team_member)
         return team_member
 
-    def find_by_id(self, team_member_id: str) -> Optional[TeamMember]:
+    def find_by_id(self, team_member_id: int) -> Optional[TeamMember]:
         return self.session.get(TeamMember, team_member_id)
 
     def delete(self, member:TeamMember):

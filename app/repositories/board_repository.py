@@ -14,7 +14,7 @@ class BoardRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_id(self, board_id: Board) -> Optional[Board]:
+    def find_by_id(self, board_id: int) -> Optional[Board]:
         ...
 
     @abstractmethod

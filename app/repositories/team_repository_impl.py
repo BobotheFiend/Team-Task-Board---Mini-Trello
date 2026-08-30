@@ -13,7 +13,7 @@ class TeamRepositoryImpl(TeamRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def save(self, team: Team) -> Team:
+    def save(self, team: int) -> Team:
         self.session.add(team)
         self.session.commit()
         self.session.refresh(team)

@@ -14,7 +14,7 @@ class TodoRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_id(self, todo_id: Todo) -> Optional[Todo]:
+    def find_by_id(self, todo_id: int) -> Optional[Todo]:
         ...
 
     @abstractmethod

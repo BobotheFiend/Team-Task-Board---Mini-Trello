@@ -14,7 +14,7 @@ class TaskRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_id(self, task_id: Task) -> Optional[Task]:
+    def find_by_id(self, task_id: int) -> Optional[Task]:
         ...
 
     @abstractmethod

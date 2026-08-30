@@ -19,7 +19,7 @@ class TaskRepositoryImpl(TaskRepository):
         self.session.refresh(task)
         return task
 
-    def find_by_id(self, task_id: str) -> Optional[Task]:
+    def find_by_id(self, task_id: int) -> Optional[Task]:
         return self.session.get(Task, task_id)
 
     def delete(self, member:Task):
