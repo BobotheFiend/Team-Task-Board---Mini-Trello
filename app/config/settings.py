@@ -1,7 +1,5 @@
-from pydantic_settings import SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlmodel import SQLModel, create_engine
-
-from pydantic import BaseSettings
 
 class Settings(BaseSettings):
 

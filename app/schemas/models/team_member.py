@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 from pydantic import EmailStr
@@ -13,7 +12,6 @@ class TeamMember(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: EmailStr = Field(unique=True, index=True, sa_type=AutoString)
     name: str
-    password: str = Field(validation_alias="######")
+    password: str
     role: Role = Field(default=Role.MEMBER)
     is_active: bool = Field(default=False)
-
