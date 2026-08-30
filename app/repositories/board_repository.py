@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from schemas.models.board import Board
+from app.schemas.models.board import Board
 
 
 class BoardRepository(ABC):

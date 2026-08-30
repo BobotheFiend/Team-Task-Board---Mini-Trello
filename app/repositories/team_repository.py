@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from schemas.models.team import Team
+from app.schemas.models.team import Team
 
 
 class TeamRepository(ABC):

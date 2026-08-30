@@ -3,7 +3,7 @@ from typing import Optional, List, Any
 from sqlmodel import Session, select, func
 
 from app.repositories.task_repository import TaskRepository
-from schemas.models.task import Task
+from app.schemas.models.task import Task
 
 
 class TaskRepositoryImpl(TaskRepository):
@@ -35,4 +35,4 @@ class TaskRepositoryImpl(TaskRepository):
 
     def count(self) -> int:
         query = select(func.count(Task.id))
-        return self.session.exec(query)
+        return self.session.exec(query).one()

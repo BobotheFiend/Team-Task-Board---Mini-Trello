@@ -3,7 +3,7 @@ from typing import Optional, List, Any
 from sqlmodel import Session, select, func
 
 from app.repositories.team_repository import TeamRepository
-from schemas.models.team import Team
+from app.schemas.models.team import Team
 
 
 class TeamRepositoryImpl(TeamRepository):
@@ -35,4 +35,4 @@ class TeamRepositoryImpl(TeamRepository):
 
     def count(self) -> int:
         query = select(func.count(Team.id))
-        return self.session.exec(query)
+        return self.session.exec(query).one()

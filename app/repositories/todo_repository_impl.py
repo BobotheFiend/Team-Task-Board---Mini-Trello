@@ -3,7 +3,7 @@ from typing import Optional, List, Any
 from sqlmodel import Session, select, func
 
 from app.repositories.todo_repository import TodoRepository
-from schemas.models.todo import Todo
+from app.schemas.models.todo import Todo
 
 
 class TodoRepositoryImpl(TodoRepository):
@@ -34,4 +34,4 @@ class TodoRepositoryImpl(TodoRepository):
 
     def count(self) -> int:
         query = select(func.count(Todo.id))
-        return self.session.exec(query)
+        return self.session.exec(query).one()

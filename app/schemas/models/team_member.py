@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import EmailStr
 from sqlmodel import SQLModel, Field, AutoString
 
-from schemas.models.enums.role import Role
+from app.schemas.models.enums.role import Role
 
 
 class TeamMember(SQLModel, table=True):

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from schemas.models.task import Task
+from app.schemas.models.task import Task
 
 
 class TaskRepository(ABC):

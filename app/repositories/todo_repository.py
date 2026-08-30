@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from schemas.models.todo import Todo
+from app.schemas.models.todo import Todo
 
 
 class TodoRepository(ABC):
