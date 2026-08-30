@@ -1,10 +1,9 @@
-from pydantic import BaseModel, EmailStr, Field
+import sqlmodel
+from pydantic import EmailStr
+from sqlmodel import Field, SQLModel
 
-from schemas.models.enums.role import Role
 
-
-class RegisterUserRequest(BaseModel):
+class RegisterUserRequest(SQLModel):
     name: str
     email: EmailStr
-    password: str = Field(..., le=8,ge=20)
-    role: Role
+    password: str = Field(..., max_length=20,min_length=8)
