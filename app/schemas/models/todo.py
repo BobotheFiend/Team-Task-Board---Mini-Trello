@@ -3,8 +3,8 @@ from datetime import datetime
 from typing import Optional
 from sqlmodel import SQLModel, Field, JSON
 
-from schemas.models.enums.priority import Priority
-from schemas.models.enums.status import Status
+from app.schemas.models.enums.priority import Priority
+from app.schemas.models.enums.status import Status
 
 
 

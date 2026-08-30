@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from schemas.models.board import Board
+from app.schemas.models.board import Board
 
 
 class BoardRepository(ABC):
@@ -14,7 +14,7 @@ class BoardRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_id(self, board_id: Board) -> Optional[Board]:
+    def find_by_id(self, board_id: int) -> Optional[Board]:
         ...
 
     @abstractmethod

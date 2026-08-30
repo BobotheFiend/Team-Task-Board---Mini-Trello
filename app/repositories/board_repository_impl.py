@@ -3,7 +3,7 @@ from typing import Optional, List, Any
 from sqlmodel import Session, select, func
 
 from app.repositories.board_repository import BoardRepository
-from schemas.models.board import Board
+from app.schemas.models.board import Board
 
 
 class BoardRepositoryImpl(BoardRepository):
@@ -18,7 +18,7 @@ class BoardRepositoryImpl(BoardRepository):
         self.session.refresh(board)
         return board
 
-    def find_by_id(self, board_id: str) -> Optional[Board]:
+    def find_by_id(self, board_id: int) -> Optional[Board]:
         return self.session.get(Board, board_id)
 
     def delete(self, member:Board):
@@ -34,4 +34,4 @@ class BoardRepositoryImpl(BoardRepository):
 
     def count(self) -> int:
         query = select(func.count(Board.id))
-        return self.session.exec(query)
+        return self.session.exec(query).one()

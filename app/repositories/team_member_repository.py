@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from schemas.models.team_member import TeamMember
+from app.schemas.models.team_member import TeamMember
 
 
 class TeamMemberRepository(ABC):
@@ -14,7 +14,7 @@ class TeamMemberRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_id(self, team_member_id: TeamMember):
+    def find_by_id(self, team_member_id: int):
         ...
 
     @abstractmethod
@@ -22,7 +22,7 @@ class TeamMemberRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_email(self, team_member_email: str) -> TeamMember:
+    def find_by_email(self, team_member_email: str) -> TeamMember | None:
         ...
 
     @abstractmethod

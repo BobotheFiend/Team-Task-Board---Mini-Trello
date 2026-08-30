@@ -22,9 +22,8 @@ class TeamMemberRepositoryImpl(TeamMemberRepository):
     def find_by_id(self, team_member_id: str) -> Optional[TeamMember]:
         return self.session.get(TeamMember, team_member_id)
 
-    def delete(self, member: TeamMember):
+    def delete(self, member:TeamMember):
         self.session.delete(member)
-        self.session.commit()
 
     def view_all(self) -> List[TeamMember]:
         return self.session.exec(select(TeamMember)).all()
@@ -36,4 +35,4 @@ class TeamMemberRepositoryImpl(TeamMemberRepository):
 
     def count(self) -> int:
         query = select(func.count(TeamMember.id))
-        return self.session.exec(query).one()
+        return self.session.exec(query)

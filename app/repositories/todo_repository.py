@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from schemas.models.todo import Todo
+from app.schemas.models.todo import Todo
 
 
 class TodoRepository(ABC):
@@ -14,7 +14,7 @@ class TodoRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_id(self, todo_id: Todo) -> Optional[Todo]:
+    def find_by_id(self, todo_id: int) -> Optional[Todo]:
         ...
 
     @abstractmethod
