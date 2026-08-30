@@ -1,6 +1,6 @@
 from pydantic_settings import SettingsConfigDict
 from sqlmodel import SQLModel, create_engine
-from urllib.parse import quote_plus
+
 from pydantic import BaseSettings
 
 class Settings(BaseSettings):

@@ -8,10 +8,10 @@ from schemas.models.enums.status import Status
 
 
 
-class ToDo(SQLModel, table=True):
+class Todo(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    title: str
+    title: str = Field(unique=True, nullable=False)
     created_at: Optional[datetime] = Field(default_factory=datetime.now)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
     position: Optional[int] = None

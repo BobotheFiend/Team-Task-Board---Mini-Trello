@@ -8,5 +8,7 @@ class Board(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     task_ids: list[int] | None = Field(default=[], sa_type=JSON)
     todo_ids: list[int] | None = Field(default=[], sa_type=JSON)
+    owner_id: Optional[int] = Field(default=None, foreign_key="team_member.id")
+    owner_email: Optional[str] = Field(default=None, foreign_key="team_member.email")
 
 

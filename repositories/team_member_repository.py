@@ -20,3 +20,11 @@ class TeamMemberRepository(ABC):
     @abstractmethod
     def view_all(self) -> List[TeamMember]:
         ...
+
+    @abstractmethod
+    def find_by_email(self, team_member_email: str) -> TeamMember:
+        ...
+
+    @abstractmethod
+    def count(self):
+        ...

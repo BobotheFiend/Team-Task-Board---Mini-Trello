@@ -1,45 +1,17 @@
+import pytest
+from sqlmodel import Session
 
-test_engine = create_engine(
-    "sqlite:///:memory:",
-    connect_args={"check_same_thread": False}
-)
+from repositories.team_member_repository import TeamMemberRepository
+from repositories.team_member_repository_impl import TeamMemberRepositoryImpl
 
-class TestCustomerRepository:
 
-    @pytest.fixture
-    def session(self):
-        SQLModel.metadata.create_all(test_engine)
-
-        with Session(test_engine) as session:
-            yield session
-
-        SQLModel.metadata.drop_all(test_engine)
+class TeamMemberRepositoryTest:
 
     @pytest.fixture
-    def saved_customer(self, session) -> Customer:
-        customer = Customer(
-            name="John",
-            email="john@gmail.com",
-            password="test-password"
-        )
+    def team_member_repository(self, session: Session) -> TeamMemberRepository:
+       return TeamMemberRepositoryImpl(session=session)
 
-        session.add(customer)
-        session.commit()
-        session.refresh(customer)
 
-        return customer
-
-    def test_save(self, session):
-        repo = CustomerRepository(session)
-
-        customer = Customer(
-            name="John",
-            email="john@gmail.com",
-            password="test-password"
-        )
-
-        saved_customer = repo.save(customer)
-
-        assert saved_customer.id is not None
-        assert saved_customer.name == "John"
-        assert saved_customer.email == "john@gmail.com"
+    def test_repository_is_empty(self, team_member_repository: TeamMemberRepository):
+        size = team_member_repository.count()
+        assert size == 0

@@ -1,11 +1,15 @@
 from typing import Optional, List
-from sqlmodel import Session, select
+
+from sqlmodel import Session, select, func
 
 from repositories.team_member_repository import TeamMemberRepository
 from schemas.models.team_member import TeamMember
 
 
 class TeamMemberRepositoryImpl(TeamMemberRepository):
+
+
+
     def __init__(self, session: Session):
         self.session = session
 
@@ -28,3 +32,7 @@ class TeamMemberRepositoryImpl(TeamMemberRepository):
         select_team_member = select(TeamMember).where(TeamMember.email == team_member_email)
         found_member = self.session.exec(select_team_member).first()
         return found_member
+
+    def count(self) -> int:
+        query = select(func.count(TeamMember.id))
+        return self.session.exec(query)

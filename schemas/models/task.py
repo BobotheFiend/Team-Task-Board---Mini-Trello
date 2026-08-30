@@ -7,7 +7,7 @@ from sqlmodel import SQLModel, Field, JSON
 class Task(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    title: str
+    title: str = Field(unique=True, nullable=False)
     todos: list[int] | None = Field(default=[], sa_type=JSON)
     team_members : list[str] = Field(default=[], sa_type=JSON)
     due_date: datetime | None = None
