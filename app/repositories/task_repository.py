@@ -5,6 +5,7 @@ from app.schemas.models.task import Task
 
 
 class TaskRepository(ABC):
+
     @abstractmethod
     def save(self, task: Task) -> Task:
         ...
@@ -28,3 +29,4 @@ class TaskRepository(ABC):
     @abstractmethod
     def count(self) -> int:
         ...
+
