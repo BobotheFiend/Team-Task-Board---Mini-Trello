@@ -2,7 +2,7 @@ from typing import Optional, List, Any
 
 from sqlmodel import Session, select, func
 
-from repositories.task_repository import TaskRepository
+from app.repositories.task_repository import TaskRepository
 from schemas.models.task import Task
 
 

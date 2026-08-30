@@ -2,7 +2,7 @@ from typing import Optional, List, Any
 
 from sqlmodel import Session, select, func
 
-from repositories.board_repository import BoardRepository
+from app.repositories.board_repository import BoardRepository
 from schemas.models.board import Board
 
 

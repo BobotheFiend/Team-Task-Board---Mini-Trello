@@ -2,7 +2,7 @@ from typing import Optional, List, Any
 
 from sqlmodel import Session, select, func
 
-from repositories.todo_repository import TodoRepository
+from app.repositories.todo_repository import TodoRepository
 from schemas.models.todo import Todo
 
 

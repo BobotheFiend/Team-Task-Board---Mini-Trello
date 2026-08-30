@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from sqlmodel import Session, select, func
 
-from repositories.team_member_repository import TeamMemberRepository
+from app.repositories.team_member_repository import TeamMemberRepository
 from schemas.models.team_member import TeamMember
 
 

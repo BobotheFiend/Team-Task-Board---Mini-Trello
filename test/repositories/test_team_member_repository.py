@@ -1,8 +1,8 @@
 import pytest
 from sqlmodel import Session
 
-from repositories.team_member_repository import TeamMemberRepository
-from repositories.team_member_repository_impl import TeamMemberRepositoryImpl
+from app.repositories.team_member_repository import TeamMemberRepository
+from app.repositories.team_member_repository_impl import TeamMemberRepositoryImpl
 
 
 class TeamMemberRepositoryTest:
