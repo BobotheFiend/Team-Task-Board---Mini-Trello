@@ -22,7 +22,7 @@ class TeamMemberRepository(ABC):
         ...
 
     @abstractmethod
-    def find_by_email(self, team_member_email: str) -> TeamMember:
+    def find_by_email(self, team_member_email: str) -> TeamMember | None:
         ...
 
     @abstractmethod
