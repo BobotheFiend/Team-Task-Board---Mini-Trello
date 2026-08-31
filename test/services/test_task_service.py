@@ -1,231 +1,371 @@
-from datetime import datetime
-
 import pytest
+from datetime import datetime
+from sqlmodel import Session
 
-from app.schemas.requests.create_task_request import CreateTaskRequest, CreateTodoRequest
-from app.schemas.models.task import Task
+from app.repositories.task_repository import TaskRepository
+from app.repositories.task_repository_impl import TaskRepositoryImpl
+from app.repositories.team_repository import TeamRepository
+from app.repositories.team_repository_impl import TeamRepositoryImpl
+from app.repositories.team_member_repository import TeamMemberRepository
+from app.repositories.team_member_repository_impl import TeamMemberRepositoryImpl
+from app.repositories.todo_repository import TodoRepository
+from app.repositories.todo_repository_impl import TodoRepositoryImpl
+
+from app.schemas.models.enums.role import Role
 from app.schemas.models.team import Team
 from app.schemas.models.team_member import TeamMember
+from app.schemas.requests.create_task_request import (
+    CreateTaskRequest,
+    CreateTodoRequest
+)
+from app.schemas.requests.login_user_request import LoginUserRequest
+from app.schemas.requests.register_user_request import RegisterUserRequest
+
+from app.services.auth_service import AuthService
 from app.services.task_service import TaskService
 
 
-class FakeTaskRepository:
+class TestTaskService:
 
-    def __init__(self):
-        self.tasks = []
+    @pytest.fixture
+    def team_member_repository(
+        self,
+        session: Session
+    ) -> TeamMemberRepository:
 
-    def find_by_task_title(self, task_title):
-        for task in self.tasks:
-            if task.title == task_title:
-                return task
-        return None
+        return TeamMemberRepositoryImpl(session=session)
 
-    def save(self, task):
-        task.id = len(self.tasks) + 1
-        self.tasks.append(task)
-        return task
+    @pytest.fixture
+    def team_repository(
+        self,
+        session: Session
+    ) -> TeamRepository:
 
+        return TeamRepositoryImpl(session=session)
 
-class FakeTeamRepository:
+    @pytest.fixture
+    def task_repository(
+        self,
+        session: Session
+    ) -> TaskRepository:
 
-    def __init__(self, team=None):
-        self.team = team
+        return TaskRepositoryImpl(session=session)
 
-    def find_by_id(self, team_id):
-        if self.team is not None and self.team.id == team_id:
-            return self.team
-        return None
+    @pytest.fixture
+    def todo_repository(
+        self,
+        session: Session
+    ) -> TodoRepository:
 
+        return TodoRepositoryImpl(session=session)
 
-class FakeTeamMemberRepository:
+    @pytest.fixture
+    def auth_service(
+        self,
+        team_member_repository: TeamMemberRepository
+    ) -> AuthService:
 
-    def __init__(self, members=None):
-        self.members = members or []
+        return AuthService(team_member_repository)
 
-    def find_by_id(self, team_member_id):
-        for member in self.members:
-            if member.id == team_member_id:
-                return member
-        return None
+    @pytest.fixture
+    def task_service(
+        self,
+        task_repository: TaskRepository,
+        team_repository: TeamRepository,
+        team_member_repository: TeamMemberRepository,
+        todo_repository: TodoRepository
+    ) -> TaskService:
 
+        return TaskService(
+            task_repository=task_repository,
+            team_repository=team_repository,
+            team_member_repository=team_member_repository,
+            todo_repository=todo_repository
+        )
 
-class FakeTodoRepository:
+    @pytest.fixture
+    def logged_in_team_lead(
+        self,
+        auth_service: AuthService,
+        team_member_repository: TeamMemberRepository,
+        team_repository: TeamRepository
+    ) -> TeamMember:
 
-    def __init__(self):
-        self.todos = []
+        register_request = RegisterUserRequest(
+            email="cjseicolon@semicolon.com",
+            name="CJ Emuedo",
+            password="password",
+            role=Role.LEAD
+        )
 
-    def save(self, todo):
-        todo.id = len(self.todos) + 1
-        self.todos.append(todo)
-        return todo
+        member = auth_service.register(register_request)
 
-
-@pytest.fixture
-def team():
-    return Team(
-        id=1,
-        name="Development Team",
-        members_id=[1, 2, 3],
-        lead=1
-    )
-
-
-@pytest.fixture
-def team_members():
-    return [
-        TeamMember(
-            id=1,
-            email="john@example.com",
-            name="John",
-            password="password"
-        ),
-        TeamMember(
-            id=2,
-            email="mary@example.com",
-            name="Mary",
-            password="password"
-        ),
-        TeamMember(
-            id=3,
-            email="peter@example.com",
-            name="Peter",
+        login_request = LoginUserRequest(
+            email="cjseicolon@semicolon.com",
             password="password"
         )
-    ]
 
+        member = auth_service.login(login_request)
 
-@pytest.fixture
-def task_service(team, team_members):
-    return TaskService(
-        task_repository=FakeTaskRepository(),
-        team_repository=FakeTeamRepository(team),
-        team_member_repository=FakeTeamMemberRepository(team_members),
-        todo_repository=FakeTodoRepository()
-    )
+        team = Team(
+            name="CJ Development Team",
+            members_id=[member.id],
+            lead=member.id
+        )
 
+        team_repository.save(team)
 
-def test_create_task_successfully(task_service):
+        return member
 
-    request = CreateTaskRequest(
-        title="Build Authentication System",
-        team_id=1
-    )
-
-    created_task = task_service.create_task(request)
-
-    assert created_task.id == 1
-    assert created_task.title == "Build Authentication System"
-    assert created_task.team_id == 1
-
-
-def test_create_task_with_due_date(task_service):
-
-    due_date = datetime(2026, 9, 10, 12, 0)
-
-    request = CreateTaskRequest(
-        title="Build Authentication System",
-        team_id=1,
-        due_date=due_date
-    )
-
-    created_task = task_service.create_task(request)
-
-    assert created_task.due_date == due_date
-
-
-def test_create_task_without_todos(task_service):
-
-    request = CreateTaskRequest(
-        title="Build Authentication System",
-        team_id=1
-    )
-
-    created_task = task_service.create_task(request)
-
-    assert created_task.title == "Build Authentication System"
-
-
-def test_create_task_fails_when_team_does_not_exist():
-
-    task_repository = FakeTaskRepository()
-    team_repository = FakeTeamRepository()
-    team_member_repository = FakeTeamMemberRepository()
-    todo_repository = FakeTodoRepository()
-
-    task_service = TaskService(
-        task_repository,
-        team_repository,
-        team_member_repository,
-        todo_repository
-    )
-
-    request = CreateTaskRequest(
-        title="Build Authentication System",
-        team_id=999
-    )
-
-    with pytest.raises(ValueError, match="Team not found"):
-        task_service.create_task(request)
-
-
-def test_create_task_fails_when_task_title_already_exists(task_service):
-
-    existing_task = Task(
-        id=1,
-        title="Build Authentication System",
-        team_id=1
-    )
-
-    task_service.task_repository.tasks.append(existing_task)
-
-    request = CreateTaskRequest(
-        title="Build Authentication System",
-        team_id=1
-    )
-
-    with pytest.raises(
-        ValueError,
-        match="Task with this title already exists"
+    def test_create_task_successfully(
+        self,
+        task_service: TaskService,
+        logged_in_team_lead: TeamMember,
+        team_repository: TeamRepository
     ):
-        task_service.create_task(request)
 
+        team = team_repository.find_by_team_name(
+            "CJ Development Team"
+        )
 
-def test_create_task_fails_when_todo_member_does_not_exist(task_service):
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id
+        )
 
-    request = CreateTaskRequest(
-        title="Build Authentication System",
-        team_id=1,
-        todos=[
-            CreateTodoRequest(
-                title="Build Login API",
-                assigned_to=999
+        created_task = task_service.create_task(
+            request,
+            logged_in_team_lead.id
+        )
+
+        assert created_task.id is not None
+        assert created_task.title == "Build Authentication System"
+        assert created_task.team_id == team.id
+
+    def test_create_task_with_due_date(
+        self,
+        task_service: TaskService,
+        logged_in_team_lead: TeamMember,
+        team_repository: TeamRepository
+    ):
+
+        team = team_repository.find_by_team_name(
+            "CJ Development Team"
+        )
+
+        due_date = datetime(2026, 9, 10, 12, 0)
+
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id,
+            due_date=due_date
+        )
+
+        created_task = task_service.create_task(
+            request,
+            logged_in_team_lead.id
+        )
+
+        assert created_task.due_date == due_date
+
+    def test_create_task_without_todos(
+        self,
+        task_service: TaskService,
+        logged_in_team_lead: TeamMember,
+        team_repository: TeamRepository
+    ):
+
+        team = team_repository.find_by_team_name(
+            "CJ Development Team"
+        )
+
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id
+        )
+
+        created_task = task_service.create_task(
+            request,
+            logged_in_team_lead.id
+        )
+
+        assert created_task.title == "Build Authentication System"
+
+    def test_create_task_fails_when_user_is_not_logged_in(
+        self,
+        task_service: TaskService,
+        logged_in_team_lead: TeamMember,
+        team_repository: TeamRepository,
+        team_member_repository: TeamMemberRepository
+    ):
+
+        team = team_repository.find_by_team_name(
+            "CJ Development Team"
+        )
+
+        logged_in_team_lead.is_active = False
+        team_member_repository.save(logged_in_team_lead)
+
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id
+        )
+
+        with pytest.raises(
+            ValueError,
+            match="User must be logged in"
+        ):
+            task_service.create_task(
+                request,
+                logged_in_team_lead.id
             )
-        ]
-    )
 
-    with pytest.raises(
-        ValueError,
-        match="Team member 999 not found"
+    def test_create_task_fails_when_user_is_not_team_lead(
+        self,
+        task_service: TaskService,
+        auth_service: AuthService,
+        team_repository: TeamRepository,
+        team_member_repository: TeamMemberRepository
     ):
-        task_service.create_task(request)
 
-
-def test_create_task_fails_when_todo_member_is_not_in_team(task_service):
-
-    request = CreateTaskRequest(
-        title="Build Authentication System",
-        team_id=1,
-        todos=[
-            CreateTodoRequest(
-                title="Build Login API",
-                assigned_to=4
+        lead = auth_service.register(
+            RegisterUserRequest(
+                email="cjlead@semicolon.com",
+                name="CJ Emuedo",
+                password="password",
+                role=Role.LEAD
             )
-        ]
-    )
+        )
 
-    with pytest.raises(
-        ValueError,
-        match="Team member 4 not found"
+        auth_service.login(
+            LoginUserRequest(
+                email="cjlead@semicolon.com",
+                password="password"
+            )
+        )
+
+        member = auth_service.register(
+            RegisterUserRequest(
+                email="cjmember@semicolon.com",
+                name="CJ Seicolon",
+                password="password",
+                role=Role.MEMBER
+            )
+        )
+
+        auth_service.login(
+            LoginUserRequest(
+                email="cjmember@semicolon.com",
+                password="password"
+            )
+        )
+
+        team = Team(
+            name="CJ Another Team",
+            members_id=[lead.id, member.id],
+            lead=lead.id
+        )
+
+        team_repository.save(team)
+
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id
+        )
+
+        with pytest.raises(
+            ValueError,
+            match="Only the team lead can create a task"
+        ):
+            task_service.create_task(
+                request,
+                member.id
+            )
+
+    def test_create_task_fails_when_team_does_not_exist(
+        self,
+        task_service: TaskService,
+        logged_in_team_lead: TeamMember
     ):
-        task_service.create_task(request)
+
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=999
+        )
+
+        with pytest.raises(
+            ValueError,
+            match="Team not found"
+        ):
+            task_service.create_task(
+                request,
+                logged_in_team_lead.id
+            )
+
+    def test_create_task_fails_when_task_title_already_exists(
+        self,
+        task_service: TaskService,
+        logged_in_team_lead: TeamMember,
+        team_repository: TeamRepository,
+        task_repository: TaskRepository
+    ):
+
+        team = team_repository.find_by_team_name(
+            "CJ Development Team"
+        )
+
+        existing_request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id
+        )
+
+        task_service.create_task(
+            existing_request,
+            logged_in_team_lead.id
+        )
+
+        duplicate_request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id
+        )
+
+        with pytest.raises(
+            ValueError,
+            match="Task with this title already exists"
+        ):
+            task_service.create_task(
+                duplicate_request,
+                logged_in_team_lead.id
+            )
+
+    def test_create_task_fails_when_todo_member_does_not_exist(
+        self,
+        task_service: TaskService,
+        logged_in_team_lead: TeamMember,
+        team_repository: TeamRepository
+    ):
+
+        team = team_repository.find_by_team_name(
+            "CJ Development Team"
+        )
+
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id,
+            todos=[
+                CreateTodoRequest(
+                    title="Build Login API",
+                    assigned_to=999
+                )
+            ]
+        )
+
+        with pytest.raises(
+            ValueError,
+            match="Team member 999 not found"
+        ):
+            task_service.create_task(
+                request,
+                logged_in_team_lead.id
+            )
 
