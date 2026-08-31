@@ -13,6 +13,7 @@ from app.repositories.team_repository_impl import TeamRepositoryImpl
 from app.repositories.todo_repository import TodoRepository
 from app.repositories.todo_repository_impl import TodoRepositoryImpl
 from app.services.auth_service import AuthService
+from app.services.task_service import TaskService
 
 
 def get_session():
@@ -40,3 +41,19 @@ def get_board_repository(session: Session) -> BoardRepository:
 # SERVICE DEPENDENCY INJECTION
 def get_auth_service(repository: TeamMemberRepository = Depends(get_team_member_repository)) -> AuthService:
     return AuthService(repository)
+
+def get_task_service(
+        team_repository: TeamRepository = Depends(get_team_repository),
+        task_repository: TaskRepository = Depends(get_task_repository),
+        team_member_repository: TeamMemberRepository = Depends(get_team_member_repository),
+        todo_repository: TodoRepository = Depends(get_todo_repository)
+
+    ):
+
+
+    return TaskService(
+        task_repository=task_repository,
+        team_repository=team_repository,
+        team_member_repository=team_member_repository,
+        todo_repository=todo_repository
+    )
