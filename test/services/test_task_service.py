@@ -369,3 +369,49 @@ class TestTaskService:
                 logged_in_team_lead.id
             )
 
+
+    def test_create_task_with_todos(
+            self,
+            task_service: TaskService,
+            logged_in_team_lead: TeamMember,
+            team_repository: TeamRepository,
+            team_member_repository: TeamMemberRepository,
+            todo_repository: TodoRepository
+    ):
+        team = team_repository.find_by_team_name(
+            "CJ Development Team"
+        )
+
+        team_member = team_member_repository.find_by_id(
+            logged_in_team_lead.id
+        )
+
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id,
+            todos=[
+                CreateTodoRequest(
+                    title="Build Login API",
+                    assigned_to=team_member.id
+                )
+            ]
+        )
+
+        created_task = task_service.create_task(
+            request,
+            logged_in_team_lead.id
+        )
+
+        todos = todo_repository.view_all()
+
+        assert created_task.id is not None
+        assert len(todos) == 1
+
+        created_todo = todos[0]
+
+        assert created_todo.title == "Build Login API"
+        assert created_todo.assigned_to == team_member.id
+        assert created_todo.task_id == created_task.id
+
+
+

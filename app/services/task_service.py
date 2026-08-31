@@ -4,6 +4,7 @@ from app.repositories.team_member_repository import TeamMemberRepository
 from app.repositories.todo_repository import TodoRepository
 from app.schemas.requests.create_task_request import CreateTaskRequest
 from app.schemas.models.task import Task
+from app.schemas.models.todo import Todo
 
 
 class TaskService:
@@ -75,4 +76,19 @@ class TaskService:
 
         saved_task = self.task_repository.save(task)
 
+        if request.todos is not None:
+
+            for todo_request in request.todos:
+                todo = Todo(
+                    title=todo_request.title,
+                    assigned_to=todo_request.assigned_to,
+                    priority=todo_request.priority,
+                    due_date=todo_request.due_date,
+                    task_id=saved_task.id
+                )
+
+                self.todo_repository.save(todo)
+
         return saved_task
+
+

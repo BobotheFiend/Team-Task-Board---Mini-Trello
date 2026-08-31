@@ -2,7 +2,7 @@ from app.repositories.team_member_repository import TeamMemberRepository
 from app.schemas.models.team_member import TeamMember
 from app.schemas.requests.login_user_request import LoginUserRequest
 from app.schemas.requests.register_user_request import RegisterUserRequest
-from schemas.requests.logout_user_request import LogoutUserRequest
+from app.schemas.requests.logout_user_request import LogoutUserRequest
 
 
 class AuthService:

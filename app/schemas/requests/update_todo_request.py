@@ -3,7 +3,7 @@ from datetime import date, time
 from pydantic import EmailStr
 from sqlmodel import SQLModel, AutoString, Field
 
-from schemas.models.enums.priority import Priority
+from app.schemas.models.enums.priority import Priority
 
 
 class CreateTodoRequest(SQLModel):

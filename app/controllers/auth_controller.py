@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 
-from schemas.requests.register_user_request import RegisterUserRequest
-from schemas.requests.login_user_request import LoginUserRequest
-from schemas.requests.logout_user_request import LogoutUserRequest
-from schemas.responses.team_member_response import TeamMemberResponse
+from app.schemas.requests.register_user_request import RegisterUserRequest
+from app.schemas.requests.login_user_request import LoginUserRequest
+from app.schemas.requests.logout_user_request import LogoutUserRequest
+from app.schemas.responses.team_member_response import TeamMemberResponse
 from app.services.auth_service import AuthService
 from dependencies import get_auth_service
 
