@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 
-from schemas.models.enums.role import Role
+from app.schemas.models.enums.role import Role
 
 
 class RegisterUserRequest(BaseModel):

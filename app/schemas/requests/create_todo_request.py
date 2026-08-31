@@ -1,10 +1,9 @@
 from datetime import time, date
 
-from pip._internal.utils import datetime
 from pydantic import EmailStr
 from sqlmodel import SQLModel, Field, AutoString
 
-from schemas.models.enums.priority import Priority
+from app.schemas.models.enums.priority import Priority
 
 
 class CreateTodoRequest(SQLModel):
