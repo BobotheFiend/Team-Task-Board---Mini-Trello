@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 
-from schemas.requests.register_user_request import RegisterUserRequest
-from schemas.requests.login_user_request import LoginUserRequest
-from schemas.requests.logout_user_request import LogoutUserRequest
-from schemas.responses.team_member_response import TeamMemberResponse
+from app.schemas.requests.register_user_request import RegisterUserRequest
+from app.schemas.requests.login_user_request import LoginUserRequest
+from app.schemas.requests.logout_user_request import LogoutUserRequest
+from app.schemas.responses.team_member_response import TeamMemberResponse
 from app.services.auth_service import AuthService
 from dependencies import get_auth_service
 
@@ -13,7 +13,7 @@ router = APIRouter()
 @router.post("/register", response_model=TeamMemberResponse)
 def register_user(request: RegisterUserRequest, auth_service: AuthService = Depends(get_auth_service)):
     try:
-        new_member = auth_service.register(request.email, request.name, request.password, request.role)
+        new_member = auth_service.register(request)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
     return TeamMemberResponse.from_team_member(new_member)
@@ -22,7 +22,7 @@ def register_user(request: RegisterUserRequest, auth_service: AuthService = Depe
 @router.post("/login", response_model=TeamMemberResponse)
 def login_user(request: LoginUserRequest, auth_service: AuthService = Depends(get_auth_service)):
     try:
-        member = auth_service.login(request.email, request.password)
+        member = auth_service.login(request)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
     return TeamMemberResponse.from_team_member(member)
@@ -31,7 +31,7 @@ def login_user(request: LoginUserRequest, auth_service: AuthService = Depends(ge
 @router.post("/logout", response_model=TeamMemberResponse)
 def logout_user(request: LogoutUserRequest, auth_service: AuthService = Depends(get_auth_service)):
     try:
-        member = auth_service.logout(request.email)
+        member = auth_service.logout(request)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
     return TeamMemberResponse.from_team_member(member)
