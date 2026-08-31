@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - TaskBoard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="sidebar-logo">
+                <h1>TaskBoard</h1>
+            </div>
+
+            <nav class="sidebar-navigation">
+
+                <a href="dashboard.html" class="nav-link active">
+                    Dashboard
+                </a>
+
+                <a href="#" class="nav-link">
+                    My Tasks
+                </a>
+
+                <a href="#" class="nav-link">
+                    Team
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <!-- Placeholder: connect this to the logout functionality later -->
+                <a href="index.html" class="nav-link logout-link">
+                    Logout
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+
+            <!-- Top Bar -->
+            <header class="dashboard-header">
+
+                <div>
+                    <h2>Dashboard</h2>
+                    <p>Manage your team's tasks and progress.</p>
+                </div>
+
+                <div class="user-info">
+
+                    <div class="user-avatar">
+                        C
+                    </div>
+
+                    <div>
+                        <strong>Ceejay</strong>
+                        <span>Team Lead</span>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- Dashboard Content -->
+            <section class="dashboard-content">
+
+                <div class="dashboard-title-row">
+
+                    <div>
+                        <h3>Tasks</h3>
+                        <p>Keep track of your team's work.</p>
+                    </div>
+
+                    <!-- Placeholder: connect this to create-task functionality later -->
+                    <button class="primary-button create-task-button">
+                        + Create Task
+                    </button>
+
+                </div>
+
+
+                <!-- Task Board -->
+                <div class="task-board">
+
+
+                    <!-- To Do Column -->
+                    <div class="task-column">
+
+                        <div class="column-header">
+                            <h4>To Do</h4>
+                            <span class="task-count">2</span>
+                        </div>
+
+
+                        <div class="task-list">
+
+                            <div class="task-card">
+
+                                <h5>Design Login Page</h5>
+
+                                <p>
+                                    Create the login page for the application.
+                                </p>
+
+                                <div class="task-card-footer">
+
+                                    <span class="task-due-date">
+                                        Due: Sep 3
+                                    </span>
+
+                                    <span class="task-member">
+                                        C
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="task-card">
+
+                                <h5>Create Database Models</h5>
+
+                                <p>
+                                    Create the database models for tasks and users.
+                                </p>
+
+                                <div class="task-card-footer">
+
+                                    <span class="task-due-date">
+                                        Due: Sep 5
+                                    </span>
+
+                                    <span class="task-member">
+                                        A
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- In Progress Column -->
+                    <div class="task-column">
+
+                        <div class="column-header">
+                            <h4>In Progress</h4>
+                            <span class="task-count">1</span>
+                        </div>
+
+
+                        <div class="task-list">
+
+                            <div class="task-card">
+
+                                <h5>Build Task Service</h5>
+
+                                <p>
+                                    Implement the service responsible for
+                                    creating and updating tasks.
+                                </p>
+
+                                <div class="task-card-footer">
+
+                                    <span class="task-due-date">
+                                        Due: Sep 2
+                                    </span>
+
+                                    <span class="task-member">
+                                        C
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Completed Column -->
+                    <div class="task-column">
+
+                        <div class="column-header">
+                            <h4>Completed</h4>
+                            <span class="task-count">2</span>
+                        </div>
+
+
+                        <div class="task-list">
+
+                            <div class="task-card">
+
+                                <h5>Project Setup</h5>
+
+                                <p>
+                                    Set up the project structure and dependencies.
+                                </p>
+
+                                <div class="task-card-footer">
+
+                                    <span class="task-due-date">
+                                        Completed
+                                    </span>
+
+                                    <span class="task-member">
+                                        C
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="task-card">
+
+                                <h5>Create Repository</h5>
+
+                                <p>
+                                    Implement the task repository.
+                                </p>
+
+                                <div class="task-card-footer">
+
+                                    <span class="task-due-date">
+                                        Completed
+                                    </span>
+
+                                    <span class="task-member">
+                                        A
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
+
