@@ -12,42 +12,6 @@ from app.schemas.requests.register_user_request import RegisterUserRequest
 from controllers.auth_controller import logout_user
 from schemas.requests.login_user_request import LoginUserRequest
 from schemas.requests.logout_user_request import LogoutUserRequest
-
-
-class FakeTeamMemberRepositoryTest(TeamMemberRepository):
-    def __init__(self):
-        self.members = []
-        self.next_id = 1
-
-    def save(self, team_member):
-        if team_member.id is None:
-            team_member.id = self.next_id
-            self.next_id = self.next_id + 1
-            self.members.append(team_member)
-        return team_member
-
-    def delete(self, team_member):
-        self.members.remove(team_member)
-
-    def find_by_id(self, team_member_id):
-        for member in self.members:
-            if member.id == team_member_id:
-                return member
-        return None
-
-    def find_by_email(self, team_member_email):
-        for member in self.members:
-            if member.email == team_member_email:
-                return member
-        return None
-
-    def view_all(self):
-        return self.members
-
-    def count(self):
-        return len(self.members)
-
-
 class TestAuthService:
 
     @pytest.fixture

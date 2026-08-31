@@ -1,5 +1,5 @@
 import pytest
-from sqlmodel import SQLModel, create_engine, Session, delete
+from sqlmodel import SQLModel, create_engine, Session
 
 TEST_DATABASE_URL: str = "sqlite:///./test.db"
 

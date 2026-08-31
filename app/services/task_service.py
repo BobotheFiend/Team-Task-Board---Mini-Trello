@@ -20,14 +20,30 @@ class TaskService:
         self.team_member_repository = team_member_repository
         self.todo_repository = todo_repository
 
-    def create_task(self, request: CreateTaskRequest):
+    def create_task(
+        self,
+        request: CreateTaskRequest,
+        current_user_id: int
+    ):
+
+        current_user = self.team_member_repository.find_by_id(
+            current_user_id
+        )
+
+        if current_user is None or not current_user.is_active:
+            raise ValueError("User must be logged in")
 
         team = self.team_repository.find_by_id(request.team_id)
 
         if team is None:
             raise ValueError("Team not found")
 
-        existing_task = self.task_repository.find_by_task_title(request.title)
+        if team.lead != current_user_id:
+            raise ValueError("Only the team lead can create a task")
+
+        existing_task = self.task_repository.find_by_task_title(
+            request.title
+        )
 
         if existing_task is not None:
             raise ValueError("Task with this title already exists")
@@ -60,4 +76,3 @@ class TaskService:
         saved_task = self.task_repository.save(task)
 
         return saved_task
-
