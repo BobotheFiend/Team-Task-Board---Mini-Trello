@@ -1,0 +1,411 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card h1 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.auth-card h2 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #333;
+}
+
+.role-selection {
+    display: flex;
+    gap: 15px;
+}
+
+.role-option {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 12px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.role-option input {
+    margin-right: 8px;
+}
+
+.primary-button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    background-color: #222;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.primary-button:hover {
+    background-color: #444;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+}
+
+.auth-footer a {
+    color: #222;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ================================
+   DASHBOARD
+   ================================ */
+
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    background-color: #f4f6f8;
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background-color: #222;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 15px;
+}
+
+.sidebar-logo {
+    padding: 0 10px;
+    margin-bottom: 40px;
+}
+
+.sidebar-logo h1 {
+    font-size: 24px;
+}
+
+.sidebar-navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-link {
+    display: block;
+    padding: 12px 15px;
+    border-radius: 6px;
+    color: #ccc;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav-link:hover {
+    background-color: #333;
+    color: white;
+}
+
+.nav-link.active {
+    background-color: #444;
+    color: white;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+.logout-link {
+    color: #ffb3b3;
+}
+
+
+/* Main Dashboard */
+
+.dashboard-main {
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* Header */
+
+.dashboard-header {
+    background-color: white;
+    padding: 25px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.dashboard-header h2 {
+    font-size: 26px;
+    margin-bottom: 5px;
+}
+
+.dashboard-header p {
+    color: #777;
+    font-size: 14px;
+}
+
+
+/* User information */
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info strong {
+    display: block;
+    font-size: 14px;
+}
+
+.user-info span {
+    display: block;
+    color: #777;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #222;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+
+/* Dashboard content */
+
+.dashboard-content {
+    padding: 30px 35px;
+}
+
+.dashboard-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.dashboard-title-row h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.dashboard-title-row p {
+    color: #777;
+    font-size: 14px;
+}
+
+.create-task-button {
+    width: auto;
+    padding: 11px 18px;
+}
+
+
+/* Task board */
+
+.task-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+
+/* Task columns */
+
+.task-column {
+    background-color: #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 300px;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.column-header h4 {
+    font-size: 15px;
+}
+
+.task-count {
+    background-color: white;
+    border-radius: 20px;
+    padding: 3px 9px;
+    font-size: 12px;
+    color: #555;
+}
+
+
+/* Task cards */
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.task-card {
+    background-color: white;
+    border-radius: 7px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.task-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.task-card h5 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.task-card p {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.task-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-due-date {
+    font-size: 11px;
+    color: #777;
+}
+
+.task-member {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #222;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+
+/* Responsive design */
+
+@media (max-width: 900px) {
+
+    .task-board {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .dashboard-header {
+        padding: 20px;
+    }
+
+    .dashboard-content {
+        padding: 20px;
+    }
+
+}
+
+

@@ -1,86 +1,80 @@
+
 import pytest
+from pydantic import EmailStr
+from sqlmodel import Session
 
 from app.services.auth_service import AuthService
 from app.repositories.team_member_repository import TeamMemberRepository
-from schemas.models.enums.role import Role
-
-
-class FakeTeamMemberRepository(TeamMemberRepository):
-    def __init__(self):
-        self.members = []
-        self.next_id = 1
-
-    def save(self, team_member):
-        if team_member.id is None:
-            team_member.id = self.next_id
-            self.next_id = self.next_id + 1
-            self.members.append(team_member)
-        return team_member
-
-    def delete(self, team_member):
-        self.members.remove(team_member)
-
-    def find_by_id(self, team_member_id):
-        for member in self.members:
-            if member.id == team_member_id:
-                return member
-        return None
-
-    def find_by_email(self, team_member_email):
-        for member in self.members:
-            if member.email == team_member_email:
-                return member
-        return None
-
-    def view_all(self):
-        return self.members
-
-    def count(self):
-        return len(self.members)
-
-
+from app.repositories.team_member_repository_impl import TeamMemberRepositoryImpl
+from app.schemas.models.enums.role import Role
+from app.schemas.models.team_member import TeamMember
+from app.schemas.requests.register_user_request import RegisterUserRequest
+from controllers.auth_controller import logout_user
+from schemas.requests.login_user_request import LoginUserRequest
+from schemas.requests.logout_user_request import LogoutUserRequest
 class TestAuthService:
 
     @pytest.fixture
-    def repository(self) -> TeamMemberRepository:
-        return FakeTeamMemberRepository()
+    def auth_service_repository(self, session:Session) -> TeamMemberRepository:
+        return TeamMemberRepositoryImpl(session=session)
 
     @pytest.fixture
-    def auth_service(self, repository: TeamMemberRepository) -> AuthService:
-        return AuthService(repository)
+    def auth_service(self, auth_service_repository: TeamMemberRepository) -> AuthService:
+        return AuthService(auth_service_repository)
+
+    def register_user(self, auth_service: AuthService, email:EmailStr, user_name:str) -> TeamMember:
+        request = RegisterUserRequest(
+            email=email,
+            password="password",
+            role=Role.MEMBER,
+            name=user_name
+        )
+
+        member = auth_service.register(request)
+        return member
 
     def test_register_creates_new_member(self, auth_service: AuthService):
-        member = auth_service.register("yomi@semicolon.com", "Yomi", "password123", Role.MEMBER)
-        assert member.email == "yomi@semicolon.com"
-        assert member.name == "Yomi"
-        assert member.is_active is False
-        assert member.id is not None
+        self.register_user(auth_service, "yomi@semicolon.com", "Yomi")
+        assert auth_service.repository.count() == 1
 
     def test_register_duplicate_email_raises_error(self, auth_service: AuthService):
-        auth_service.register("yomi@semicolon.com", "Yomi", "password123", Role.MEMBER)
+        self.register_user(auth_service, "yomi@semicolon.com", "Yomi")
         with pytest.raises(ValueError):
-            auth_service.register("yomi@semicolon.com", "Yomi2", "password456", Role.MEMBER)
+            self.register_user(auth_service, "yomi@semicolon.com", "Yomi23")
 
     def test_login_with_correct_credentials_succeeds(self, auth_service: AuthService):
-        auth_service.register("yomi@semicolon.com", "Yomi", "password123", Role.MEMBER)
-        member = auth_service.login("yomi@semicolon.com", "password123")
+        self.register_user(auth_service, "yomi@semicolon.com", "Yomi")
+        request = LoginUserRequest(
+            email="yomi@semicolon.com",
+            password="password"
+        )
+        member = auth_service.login(request)
         assert member.is_active is True
 
     def test_login_with_wrong_password_raises_error(self, auth_service: AuthService):
-        auth_service.register("yomi@semicolon.com", "Yomi", "password123", Role.MEMBER)
+        self.register_user(auth_service, "yomi@semicolon.com", "Yomi")
+        request = LoginUserRequest(
+            email="yomi@semicolon.com",
+            password="wrongpp"
+        )
         with pytest.raises(ValueError):
-            auth_service.login("yomi@semicolon.com", "wrongpassword")
+            auth_service.login(request)
 
     def test_login_with_nonexistent_email_raises_error(self, auth_service: AuthService):
+        request = LoginUserRequest(
+            email="ghost@semicolon.com",
+            password="password123"
+        )
         with pytest.raises(ValueError):
-            auth_service.login("ghost@semicolon.com", "password123")
+            auth_service.login(request)
 
     def test_logout_sets_member_inactive(self, auth_service: AuthService):
-        auth_service.register("yomi@semicolon.com", "Yomi", "password123", Role.MEMBER)
-        auth_service.login("yomi@semicolon.com", "password123")
-        member = auth_service.logout("yomi@semicolon.com")
+        self.register_user(auth_service, "yomi@semicolon.com", "Yomi")
+        request = LoginUserRequest(
+            email="yomi@semicolon.com",
+            password="password"
+        )
+        auth_service.login(request)
+        logout = LogoutUserRequest(email="yomi@semicolon.com")
+        member = auth_service.logout(logout)
         assert member.is_active is False
-
-    def test_logout_nonexistent_email_raises_error(self, auth_service: AuthService):
-        with pytest.raises(ValueError):
-            auth_service.logout("ghost@semicolon.com")

@@ -19,24 +19,24 @@ class TestTaskRepository:
 
     def test_a_task_registration_saves_count_is_one(self, task_repository: TaskRepository):
 
-        task = Task(title='Mow the Lawn')
+        task = Task(title='Mow the Lawn', team_id=1)
         task_repository.save(task)
         assert task_repository.count() == 1
 
     def test_2_task_registration_saves_count_is_two(self, task_repository: TaskRepository):
-        task = Task(title='Update New Request')
+        task = Task(title='Update New Request', team_id=1)
         task_repository.save(task)
 
-        task_two = Task(title='Work On EndPoint')
+        task_two = Task(title='Work On EndPoint', team_id=2)
         task_repository.save(task_two)
 
         assert task_repository.count() == 2
 
     def test_delete_a_task_from_2_total_saves_count_is_one(self, task_repository: TaskRepository):
-        task = Task(title='Work On Services')
+        task = Task(title='Work On Services', team_id=2)
         task_repository.save(task)
 
-        task_two = Task(title='Work On Repository')
+        task_two = Task(title='Work On Repository', team_id=1)
         task_repository.save(task_two)
 
         assert task_repository.count() == 2
@@ -45,7 +45,7 @@ class TestTaskRepository:
         assert task_repository.count() == 1
 
     def test_find_by_id(self, task_repository: TaskRepository):
-        task = Task(title='Work on TaskRepository')
+        task = Task(title='Work on TaskRepository', team_id=1)
         task_repository.save(task)
         assert task_repository.count() == 1
 
@@ -53,7 +53,7 @@ class TestTaskRepository:
         assert found_task == task
 
     def test_find_by_task_title(self, task_repository: TaskRepository):
-        task = Task(title='Work On Derailing THe Gutters')
+        task = Task(title='Work On Derailing THe Gutters', team_id=1)
         task_repository.save(task)
 
         found_task = task_repository.find_by_task_title(task.title)

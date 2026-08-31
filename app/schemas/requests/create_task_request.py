@@ -1,13 +1,20 @@
-from datetime import date
+from datetime import datetime
 
-from sqlmodel import SQLModel, Field
+from pydantic import BaseModel
 
-from app.schemas.models.team import Team
+from app.schemas.models.enums.priority import Priority
 
 
-class CreateTaskRequest(SQLModel):
-    team_name: str
-    team_members_email: list[str]
-    task_due_date: date =  Field(..., description="Format: YYYY-MM-DD")
-    task_name : str = Field(..., description="Name of the task")
-    created_by: str = Field(..., description="Enter Your Email")
+class CreateTodoRequest(BaseModel):
+    title: str
+    assigned_to: int
+    priority: Priority = Priority.MEDIUM
+    due_date: datetime | None = None
+
+
+class CreateTaskRequest(BaseModel):
+    title: str
+    team_id: int
+    due_date: datetime | None = None
+    todos: list[CreateTodoRequest] | None = None
+

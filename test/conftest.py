@@ -1,7 +1,7 @@
 import pytest
-from sqlmodel import SQLModel, create_engine, Session, delete
+from sqlmodel import SQLModel, create_engine, Session
 
-TEST_DATABASE_URL = "sqlite:///./test.db"
+TEST_DATABASE_URL: str = "sqlite:///./test.db"
 
 test_engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False, "timeout": 5})
 from app.schemas.models.team_member import TeamMember
