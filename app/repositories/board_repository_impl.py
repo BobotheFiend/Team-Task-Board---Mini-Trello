@@ -1,4 +1,4 @@
-from typing import Optional, List, Any
+from typing import Optional, List
 
 from sqlmodel import Session, select, func
 
