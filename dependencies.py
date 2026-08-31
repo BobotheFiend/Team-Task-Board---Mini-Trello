@@ -21,19 +21,19 @@ def get_session():
         yield session
 
 #REPOSITORY DB INJECTION
-def get_team_member_repository(session: Session) -> TeamMemberRepository:
+def get_team_member_repository(session: Session = Depends(get_session)) -> TeamMemberRepository:
     return TeamMemberRepositoryImpl(session=session)
 
-def get_team_repository(session: Session) -> TeamRepository:
+def get_team_repository(session: Session = Depends(get_session)) -> TeamRepository:
     return TeamRepositoryImpl(session=session)
 
-def get_task_repository(session: Session) -> TaskRepository:
+def get_task_repository(session: Session = Depends(get_session))  -> TaskRepository:
     return TaskRepositoryImpl(session=session)
 
-def get_todo_repository(session: Session) -> TodoRepository:
+def get_todo_repository(session: Session = Depends(get_session)) -> TodoRepository:
     return TodoRepositoryImpl(session=session)
 
-def get_board_repository(session: Session) -> BoardRepository:
+def get_board_repository(session: Session = Depends(get_session)) -> BoardRepository:
     return BoardRepositoryImpl(session=session)
 
 
