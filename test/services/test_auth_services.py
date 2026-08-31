@@ -9,9 +9,9 @@ from app.repositories.team_member_repository_impl import TeamMemberRepositoryImp
 from app.schemas.models.enums.role import Role
 from app.schemas.models.team_member import TeamMember
 from app.schemas.requests.register_user_request import RegisterUserRequest
-from controllers.auth_controller import logout_user
-from schemas.requests.login_user_request import LoginUserRequest
-from schemas.requests.logout_user_request import LogoutUserRequest
+from app.schemas.requests.login_user_request import LoginUserRequest
+from app.schemas.requests.logout_user_request import LogoutUserRequest
+
 class TestAuthService:
 
     @pytest.fixture
@@ -55,7 +55,7 @@ class TestAuthService:
         self.register_user(auth_service, "yomi@semicolon.com", "Yomi")
         request = LoginUserRequest(
             email="yomi@semicolon.com",
-            password="wrongpp"
+            password="wrongpp223"
         )
         with pytest.raises(ValueError):
             auth_service.login(request)
