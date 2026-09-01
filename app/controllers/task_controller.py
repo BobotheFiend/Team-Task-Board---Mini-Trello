@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from app.schemas.requests.create_task_request import CreateTaskRequest
 from app.schemas.models.task import Task
 from app.services.task_service import TaskService
-from dependencies import get_task_service
+from app.dependencies import get_task_service
 
 
 router = APIRouter()

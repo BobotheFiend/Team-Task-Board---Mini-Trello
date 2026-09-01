@@ -5,7 +5,7 @@ from app.schemas.requests.login_user_request import LoginUserRequest
 from app.schemas.requests.logout_user_request import LogoutUserRequest
 from app.schemas.responses.team_member_response import TeamMemberResponse
 from app.services.auth_service import AuthService
-from dependencies import get_auth_service
+from app.dependencies import get_auth_service
 
 router = APIRouter()
 

@@ -75,3 +75,6 @@ class TodoService:
 
         return self.todo_repository.save(todo)
 
+
+    def send_status_as_completed(self, request:):
+
