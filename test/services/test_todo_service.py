@@ -23,6 +23,10 @@ from app.services.auth_service import AuthService
 from app.services.todo_service import TodoService
 
 
+from app.schemas.models.enums.status import Status
+from app.schemas.requests.CompletedStatusRequest import CompletedStatusRequest
+
+
 class TestTodoService:
 
     @pytest.fixture

@@ -413,5 +413,52 @@ class TestTaskService:
         assert created_todo.assigned_to == team_member.id
         assert created_todo.task_id == created_task.id
 
+    def test_view_task_successfully(
+            self,
+            task_service: TaskService,
+            logged_in_team_lead: TeamMember,
+            team_repository: TeamRepository
+    ):
+        team = team_repository.find_by_team_name(
+            "CJ Development Team"
+        )
+
+        request = CreateTaskRequest(
+            title="Build Authentication System",
+            team_id=team.id
+        )
+
+        created_task = task_service.create_task(
+            request,
+            logged_in_team_lead.id
+        )
+
+        viewed_task = task_service.view_task(
+            created_task.id,
+            logged_in_team_lead.id
+        )
+
+        assert viewed_task.id == created_task.id
+        assert viewed_task.title == "Build Authentication System"
+
+    def test_view_task_fails_when_user_is_not_logged_in(
+            self,
+            task_service: TaskService,
+            logged_in_team_lead: TeamMember,
+            team_repository: TeamRepository,
+            team_member_repository: TeamMemberRepository
+    ):
+            team = team_repository.find_by_team_name(
+                "CJ Development Team"
+            )
+            request = CreateTaskRequest(
+                title="Build Authentication System",
+                team_id = team.id
+            )
+
+            created_task = task_service.create_task(
+                request,
+                logged_in_team_lead.id
+            )
 
 

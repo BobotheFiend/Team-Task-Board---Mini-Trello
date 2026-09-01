@@ -75,15 +75,4 @@ class TodoService:
 
         return self.todo_repository.save(todo)
 
-    def send_status_as_completed(self, todo_id: int, request: CompletedStatusRequest):
-
-        todo = self.todo_repository.find_by_id(todo_id)
-
-        if todo is None:
-            raise ValueError("Todo not found")
-
-        todo.progress = request.status
-
-        return self.todo_repository.save(todo)
-
 
