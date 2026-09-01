@@ -1,22 +1,26 @@
+
 from app.repositories.task_repository import TaskRepository
 from app.repositories.team_member_repository import TeamMemberRepository
 from app.repositories.todo_repository import TodoRepository
 from app.repositories.team_repository import TeamRepository
+from app.schemas.models.enums.status import Status
 
 from app.schemas.models.todo import Todo
+from app.schemas.requests.completed_status_request import CompletedStatusRequest
 from app.schemas.requests.create_task_request import CreateTodoRequest
+from app.schemas.responses.completed_status_response import CompletedStatusResponse
 
 
 class TodoService:
 
     def __init__(
         self,
-        todo_repository: TodoRepository,
+        todo_service_repository: TodoRepository,
         task_repository: TaskRepository,
         team_repository: TeamRepository,
         team_member_repository: TeamMemberRepository
     ):
-        self.todo_repository = todo_repository
+        self.todo_repository = todo_service_repository
         self.task_repository = task_repository
         self.team_repository = team_repository
         self.team_member_repository = team_member_repository
@@ -75,15 +79,17 @@ class TodoService:
 
         return self.todo_repository.save(todo)
 
-    def send_status_as_completed(self, todo_id: int, request: CompletedStatusRequest):
 
-        todo = self.todo_repository.find_by_id(todo_id)
+    def send_status_as_completed(self, request:CompletedStatusRequest) -> CompletedStatusResponse | str:
+        found_todo = self.todo_repository.find_by_todo_title(request.todo_title)
+        if found_todo is None:
+            raise Exception("Todo Does Not Exist")
+        if found_todo.progress == Status.LATE
+            raise Exception("Todo is Already Late!")
 
-        if todo is None:
-            raise ValueError("Todo not found")
+        self.todo_repository.save(found_todo)
 
-        todo.progress = request.status
-
-        return self.todo_repository.save(todo)
-
+        response = CompletedStatusResponse(title=found_todo.title, status=found_todo.progress)
+        response.message = f"Your Request for {found_todo.title} to be reviewed has been sent Successfully!\nDate: {response.timestamp}\nYour Progress Is Now: {response.status}"
+        return response.__str__
 
