@@ -34,4 +34,4 @@ def logout_user(request: LogoutUserRequest, auth_service: AuthService = Depends(
         member = auth_service.logout(request)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
-    return TeamMemberResponse.from_team_member(member)
+    return TeamMemberResponse.from_team_member(member)`
