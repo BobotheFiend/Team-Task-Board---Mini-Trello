@@ -23,6 +23,10 @@ from app.services.auth_service import AuthService
 from app.services.todo_service import TodoService
 
 
+from app.schemas.models.enums.status import Status
+from app.schemas.requests.CompletedStatusRequest import CompletedStatusRequest
+
+
 class TestTodoService:
 
     @pytest.fixture
@@ -75,7 +79,7 @@ class TestTodoService:
     ) -> TodoService:
 
         return TodoService(
-            todo_repository=todo_repository,
+            todo_service_repository=todo_repository,
             task_repository=task_repository,
             team_repository=team_repository,
             team_member_repository=team_member_repository
@@ -338,3 +342,5 @@ class TestTodoService:
                 lead.id
             )
 
+
+    def test_

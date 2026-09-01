@@ -19,9 +19,5 @@ app.add_middleware(
 def on_startup():
     create_db_and_tables()
 
-@app.get("/")
-def redirect_to_docs():
-    return RedirectResponse(url="/docs")
-
 app.include_router(auth_router)
 app.include_router(task_controller.router)

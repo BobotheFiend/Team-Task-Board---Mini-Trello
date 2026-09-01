@@ -4,5 +4,5 @@ from app.schemas.models.enums.status import Status
 
 
 class CompletedStatusRequest(BaseModel):
-
-    status: Status = Status.PENDING
+    todo_title: str
+    set_current_status: Status = Status.PENDING
