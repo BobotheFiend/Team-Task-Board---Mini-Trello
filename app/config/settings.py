@@ -19,7 +19,6 @@ settings = Settings()
 engine = create_engine(
     settings.TEAM_TASK_BOARD_SCHEMA,
     echo=True,
-    connect_args={"check_same_thread": False}
 )
 
 def create_db_and_tables():
