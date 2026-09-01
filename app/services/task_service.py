@@ -92,7 +92,6 @@ class TaskService:
         return saved_task
 
     def view_task(self, task_id: int, current_user_id: int):
-
         current_user = self.team_member_repository.find_by_id(
             current_user_id
         )
@@ -109,5 +108,4 @@ class TaskService:
 
         if team is None or current_user_id not in team.members_id:
             raise ValueError("You are not a member of this team")
-
         return task
