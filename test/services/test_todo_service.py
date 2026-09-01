@@ -14,9 +14,9 @@ from app.schemas.models.enums.priority import Priority
 from app.schemas.models.enums.role import Role
 from app.schemas.models.task import Task
 from app.schemas.models.team import Team
-from app.schemas.models.team_member import TeamMember
 from app.schemas.requests.create_task_request import CreateTodoRequest
 from app.schemas.requests.login_user_request import LoginUserRequest
+from app.schemas.requests.logout_user_request import LogoutUserRequest
 from app.schemas.requests.register_user_request import RegisterUserRequest
 
 from app.services.auth_service import AuthService
@@ -24,17 +24,13 @@ from app.services.todo_service import TodoService
 
 
 from app.schemas.models.enums.status import Status
-from app.schemas.requests.CompletedStatusRequest import CompletedStatusRequest
+from app.schemas.requests.completed_status_request import CompletedStatusRequest
 
 
 class TestTodoService:
 
     @pytest.fixture
-    def team_member_repository(
-        self,
-        session: Session
-    ) -> TeamMemberRepository:
-
+    def team_member_repository(self, session: Session) -> TeamMemberRepository:
         return TeamMemberRepositoryImpl(session=session)
 
     @pytest.fixture
@@ -343,4 +339,33 @@ class TestTodoService:
             )
 
 
-    def test_
+
+#Test for Send Status As Completed Service
+    def register_user(self, auth_service:AuthService):
+        request = RegisterUserRequest(
+            name="BattyBoy",
+            email="tears@semicolon.com",
+            password="password",
+            role=Role.MEMBER
+        )
+        auth_service.register(request)
+
+    def register_login_user(self, auth_service):
+        self.register_user(auth_service)
+        request = LoginUserRequest(
+            email="tears@semicolon.com",
+            password="password"
+        )
+        auth_service.login(request)
+
+
+    def logout(self, auth_service):
+        self.register_login_user(auth_service)
+        request = LogoutUserRequest(
+            email="tears@semicolon.com"
+        )
+        auth_service.logout(request)
+
+    def test_send_status_as_completed_doesnt_return_none(self, todo_service: TodoService):
+        
+

@@ -1,4 +1,4 @@
-
+from app.exceptions.todo_service_exception import TodoServiceException
 from app.repositories.task_repository import TaskRepository
 from app.repositories.team_member_repository import TeamMemberRepository
 from app.repositories.todo_repository import TodoRepository
@@ -83,9 +83,9 @@ class TodoService:
     def send_status_as_completed(self, request:CompletedStatusRequest) -> CompletedStatusResponse | str:
         found_todo = self.todo_repository.find_by_todo_title(request.todo_title)
         if found_todo is None:
-            raise Exception("Todo Does Not Exist")
-        if found_todo.progress == Status.LATE
-            raise Exception("Todo is Already Late!")
+            raise TodoServiceException("Todo Does Not Exist")
+        if found_todo.progress == Status.LATE:
+            raise TodoServiceException("Todo is Already Late!")
 
         self.todo_repository.save(found_todo)
 

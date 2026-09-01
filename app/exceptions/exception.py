@@ -1,0 +1,3 @@
+
+class TeamTaskBoardException(Exception):
+    pass
