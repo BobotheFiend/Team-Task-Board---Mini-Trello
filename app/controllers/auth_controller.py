@@ -9,7 +9,6 @@ from app.dependencies import get_auth_service
 
 router = APIRouter()
 
-
 @router.post("/register", response_model=TeamMemberResponse)
 def register_user(request: RegisterUserRequest, auth_service: AuthService = Depends(get_auth_service)):
     try:
