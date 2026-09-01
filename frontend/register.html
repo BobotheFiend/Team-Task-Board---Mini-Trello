@@ -22,7 +22,7 @@
                 Create your account to start managing tasks with your team.
             </p>
 
-            <form>
+            <form id = "register-form">
 
                 <div class="form-group">
                     <label for="name">Full Name</label>
@@ -70,7 +70,7 @@
                             <input
                                 type="radio"
                                 name="role"
-                                value="team_lead"
+                                value="Lead"
                             >
                             <span>Team Lead</span>
                         </label>
@@ -79,7 +79,7 @@
                             <input
                                 type="radio"
                                 name="role"
-                                value="team_member"
+                                value="Member"
                             >
                             <span>Team Member</span>
                         </label>
@@ -87,7 +87,7 @@
                     </div>
 
                 </div>
-
+                <p id = "register-message"></p>
                 <button type="submit" class="primary-button">
                     Create Account
                 </button>
@@ -102,6 +102,6 @@
         </div>
 
     </div>
-
+<script src = "register.js"></script>
 </body>
 </html>
