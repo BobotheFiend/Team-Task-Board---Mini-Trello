@@ -9,4 +9,4 @@ class CreateTeamResponse(BaseModel):
     lead: TeamMember
 
     def __str__(self):
-        return f" Welcome Aborad Team {self.team_name}\n\t\t\nYour Team Lead is{self.lead.name}"
+        return f" Welcome Aboard Team {self.team_name}\n\t\t\{self.team_members_email}nYour Team Lead is{self.lead.name}"

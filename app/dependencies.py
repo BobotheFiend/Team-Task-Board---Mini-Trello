@@ -14,6 +14,7 @@ from app.repositories.todo_repository import TodoRepository
 from app.repositories.todo_repository_impl import TodoRepositoryImpl
 from app.services.auth_service import AuthService
 from app.services.task_service import TaskService
+from app.services.team_service import TeamService
 
 
 def get_session():
@@ -57,3 +58,10 @@ def get_task_service(
         team_member_repository=team_member_repository,
         todo_repository=todo_repository
     )
+
+def get_team_service(
+        member_repository: TeamMemberRepository = Depends(get_team_member_repository),
+        team_repository: TeamRepository = Depends(get_team_repository)
+
+):
+    return TeamService(member_repository=member_repository, repository=team_repository)
