@@ -1,6 +1,5 @@
 import datetime
 
-
 import pytest
 from sqlmodel import Session
 
@@ -15,26 +14,26 @@ from app.repositories.todo_repository_impl import TodoRepositoryImpl
 
 from app.schemas.models.enums.priority import Priority
 from app.schemas.models.enums.role import Role
+from app.schemas.models.enums.status import Status
 from app.schemas.models.task import Task
 from app.schemas.models.team import Team
+from app.schemas.requests.completed_status_request import CompletedStatusRequest
 
-from app.schemas.requests.create_task_request import CreateTodoRequest, CreateTaskRequest
+from app.schemas.requests.create_todo_request import CreateTodoRequest
 from app.schemas.requests.login_user_request import LoginUserRequest
-from app.schemas.requests.logout_user_request import LogoutUserRequest
 from app.schemas.requests.register_user_request import RegisterUserRequest
 
 from app.services.auth_service import AuthService
 from app.services.todo_service import TodoService
 
 
-from app.schemas.models.enums.status import Status
-from app.schemas.requests.completed_status_request import CompletedStatusRequest
-
-
 class TestTodoService:
 
     @pytest.fixture
-    def team_member_repository(self, session: Session) -> TeamMemberRepository:
+    def team_member_repository(
+        self,
+        session: Session
+    ) -> TeamMemberRepository:
         return TeamMemberRepositoryImpl(session=session)
 
     @pytest.fixture
@@ -42,7 +41,6 @@ class TestTodoService:
         self,
         session: Session
     ) -> TeamRepository:
-
         return TeamRepositoryImpl(session=session)
 
     @pytest.fixture
@@ -50,7 +48,6 @@ class TestTodoService:
         self,
         session: Session
     ) -> TaskRepository:
-
         return TaskRepositoryImpl(session=session)
 
     @pytest.fixture
@@ -58,7 +55,6 @@ class TestTodoService:
         self,
         session: Session
     ) -> TodoRepository:
-
         return TodoRepositoryImpl(session=session)
 
     @pytest.fixture
@@ -66,7 +62,6 @@ class TestTodoService:
         self,
         team_member_repository: TeamMemberRepository
     ) -> AuthService:
-
         return AuthService(team_member_repository)
 
     @pytest.fixture
@@ -143,7 +138,7 @@ class TestTodoService:
     def test_create_todo_successfully(
         self,
         todo_service: TodoService,
-        todo_repository: TodoRepository,
+        todo_service_repository: TodoRepository,
         team_setup
     ):
 
@@ -152,21 +147,28 @@ class TestTodoService:
         task = team_setup["task"]
 
         request = CreateTodoRequest(
+            task_id=task.id,
+            current_user_id=lead.id,
             title="Build Login API",
             assigned_to=member.id,
-
+            owner_email=lead.email,
+            priority=None,
+            due_date=datetime.date(2026, 9, 10),
+            due_time=datetime.time(17, 0)
         )
 
-        created_todo = todo_service.create_todo(
-            request,
-        )
+        created_todo = todo_service.create_todo(request)
 
         assert created_todo.id is not None
         assert created_todo.title == "Build Login API"
         assert created_todo.assigned_to == member.id
         assert created_todo.task_id == task.id
+        assert created_todo.owner_email == lead.email
+        assert created_todo.due == datetime.datetime(
+            2026, 9, 10, 17, 0
+        )
 
-        todos = todo_repository.view_all()
+        todos = todo_service_repository.view_all()
 
         assert len(todos) == 1
 
@@ -181,16 +183,17 @@ class TestTodoService:
         task = team_setup["task"]
 
         request = CreateTodoRequest(
+            task_id=task.id,
+            current_user_id=lead.id,
             title="Build Login API",
             assigned_to=member.id,
-            priority=Priority.HIGH
+            owner_email=lead.email,
+            priority=Priority.HIGH,
+            due_date=datetime.date(2026, 9, 10),
+            due_time=datetime.time(17, 0)
         )
 
-        created_todo = todo_service.create_todo(
-            request,
-            task.id,
-            lead.id
-        )
+        created_todo = todo_service.create_todo(request)
 
         assert created_todo.priority == Priority.HIGH
 
@@ -202,25 +205,28 @@ class TestTodoService:
     ):
 
         lead = team_setup["lead"]
+        member = team_setup["member"]
         task = team_setup["task"]
 
         lead.is_active = False
         team_member_repository.save(lead)
 
         request = CreateTodoRequest(
+            task_id=task.id,
+            current_user_id=lead.id,
             title="Build Login API",
-            assigned_to=team_setup["member"].id
+            assigned_to=member.id,
+            owner_email=lead.email,
+            priority=None,
+            due_date=datetime.date(2026, 9, 10),
+            due_time=datetime.time(17, 0)
         )
 
         with pytest.raises(
             ValueError,
             match="User must be logged in"
         ):
-            todo_service.create_todo(
-                request,
-                task.id,
-                lead.id
-            )
+            todo_service.create_todo(request)
 
     def test_create_todo_fails_when_user_is_not_team_lead(
             self,
@@ -239,21 +245,21 @@ class TestTodoService:
         )
 
         request = CreateTodoRequest(
+            task_id=task.id,
+            current_user_id=member.id,
             title="Build Login API",
-            assigned_to=member.id
+            assigned_to=member.id,
+            owner_email=member.email,
+            priority=None,
+            due_date=datetime.date(2026, 9, 10),
+            due_time=datetime.time(17, 0)
         )
 
         with pytest.raises(
                 ValueError,
                 match="Only the team lead can create a todo"
         ):
-            todo_service.create_todo(
-                request,
-                task.id,
-                member.id
-            )
-
-
+            todo_service.create_todo(request)
 
     def test_create_todo_fails_when_task_does_not_exist(
         self,
@@ -265,19 +271,21 @@ class TestTodoService:
         member = team_setup["member"]
 
         request = CreateTodoRequest(
+            task_id=999,
+            current_user_id=lead.id,
             title="Build Login API",
-            assigned_to=member.id
+            assigned_to=member.id,
+            owner_email=lead.email,
+            priority=None,
+            due_date=datetime.date(2026, 9, 10),
+            due_time=datetime.time(17, 0)
         )
 
         with pytest.raises(
             ValueError,
             match="Task not found"
         ):
-            todo_service.create_todo(
-                request,
-                999,
-                lead.id
-            )
+            todo_service.create_todo(request)
 
     def test_create_todo_fails_when_assigned_member_does_not_exist(
         self,
@@ -289,26 +297,27 @@ class TestTodoService:
         task = team_setup["task"]
 
         request = CreateTodoRequest(
+            task_id=task.id,
+            current_user_id=lead.id,
             title="Build Login API",
-            assigned_to=999
+            assigned_to=999,
+            owner_email=lead.email,
+            priority=None,
+            due_date=datetime.date(2026, 9, 10),
+            due_time=datetime.time(17, 0)
         )
 
         with pytest.raises(
             ValueError,
             match="Team member 999 not found"
         ):
-            todo_service.create_todo(
-                request,
-                task.id,
-                lead.id
-            )
+            todo_service.create_todo(request)
 
     def test_create_todo_fails_when_member_is_not_in_team(
         self,
         todo_service: TodoService,
         team_setup,
-        auth_service: AuthService,
-        team_member_repository: TeamMemberRepository
+        auth_service: AuthService
     ):
 
         lead = team_setup["lead"]
@@ -324,8 +333,14 @@ class TestTodoService:
         )
 
         request = CreateTodoRequest(
+            task_id=task.id,
+            current_user_id=lead.id,
             title="Build Login API",
-            assigned_to=outsider.id
+            assigned_to=outsider.id,
+            owner_email=lead.email,
+            priority=None,
+            due_date=datetime.date(2026, 9, 10),
+            due_time=datetime.time(17, 0)
         )
 
         with pytest.raises(
@@ -335,13 +350,7 @@ class TestTodoService:
                 f"is not a member of this team"
             )
         ):
-            todo_service.create_todo(
-                request,
-                task.id,
-                lead.id
-            )
-
-
+            todo_service.create_todo(request)
 
 
 
