@@ -2,4 +2,5 @@ from app.exceptions.exception import TeamTaskBoardException
 
 
 class TaskServiceException(TeamTaskBoardException):
-    super.__init__("Task Service Exception")
+    def __init__(self, message: str):
+        super().__init__(message)

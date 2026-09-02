@@ -6,7 +6,7 @@ from sqlmodel import SQLModel, AutoString, Field
 from app.schemas.models.enums.priority import Priority
 
 
-class CreateTodoRequest(SQLModel):
+class UpdateTodoRequest(SQLModel):
 
     todo_title: str
     todo_owner_email: EmailStr = Field(sa_type=AutoString)

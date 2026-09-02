@@ -1,3 +1,6 @@
+import datetime
+
+
 import pytest
 from sqlmodel import Session
 
@@ -14,7 +17,8 @@ from app.schemas.models.enums.priority import Priority
 from app.schemas.models.enums.role import Role
 from app.schemas.models.task import Task
 from app.schemas.models.team import Team
-from app.schemas.requests.create_task_request import CreateTodoRequest
+
+from app.schemas.requests.create_task_request import CreateTodoRequest, CreateTaskRequest
 from app.schemas.requests.login_user_request import LoginUserRequest
 from app.schemas.requests.logout_user_request import LogoutUserRequest
 from app.schemas.requests.register_user_request import RegisterUserRequest
@@ -50,7 +54,7 @@ class TestTodoService:
         return TaskRepositoryImpl(session=session)
 
     @pytest.fixture
-    def todo_repository(
+    def todo_service_repository(
         self,
         session: Session
     ) -> TodoRepository:
@@ -68,14 +72,14 @@ class TestTodoService:
     @pytest.fixture
     def todo_service(
         self,
-        todo_repository: TodoRepository,
+        todo_service_repository: TodoRepository,
         task_repository: TaskRepository,
         team_repository: TeamRepository,
         team_member_repository: TeamMemberRepository
     ) -> TodoService:
 
         return TodoService(
-            todo_service_repository=todo_repository,
+            todo_service_repository=todo_service_repository,
             task_repository=task_repository,
             team_repository=team_repository,
             team_member_repository=team_member_repository
@@ -149,13 +153,12 @@ class TestTodoService:
 
         request = CreateTodoRequest(
             title="Build Login API",
-            assigned_to=member.id
+            assigned_to=member.id,
+
         )
 
         created_todo = todo_service.create_todo(
             request,
-            task.id,
-            lead.id
         )
 
         assert created_todo.id is not None
@@ -340,13 +343,17 @@ class TestTodoService:
 
 
 
-#Test for Send Status As Completed Service
+
+
+
+#---------------------- Test for Send Status As Completed Service -------------------------
+
     def register_user(self, auth_service:AuthService):
         request = RegisterUserRequest(
             name="BattyBoy",
             email="tears@semicolon.com",
             password="password",
-            role=Role.MEMBER
+            role=Role.LEAD
         )
         auth_service.register(request)
 
@@ -358,7 +365,6 @@ class TestTodoService:
         )
         auth_service.login(request)
 
-
     def logout(self, auth_service):
         self.register_login_user(auth_service)
         request = LogoutUserRequest(
@@ -366,6 +372,58 @@ class TestTodoService:
         )
         auth_service.logout(request)
 
-    def test_send_status_as_completed_doesnt_return_none(self, todo_service: TodoService):
-        
+    def a_task(self, team_repository: TeamRepository, task_repository: TaskRepository):
+        team = Team(
+            name="Group 6ick Of It",
+            members_id=[1,2,3],
+            lead=1
+        )
+        team_repository.save(team)
+
+        _task = Task(
+            title="Work On Team Task Board",
+            team_id=1,
+            due_date=datetime.datetime.now()
+        )
+
+        task_repository.save(_task)
+
+    def a_todo(self, todo_service: TodoService):
+        create_todo_request = CreateTodoRequest(
+            title="Work On Create Services",
+            assigned_to=1,
+            due_date=datetime.date(year=2026, month=9, day=30),
+            due_time=datetime.time(hour=20, minute=30),
+            owner_email="tears@semicolon.com",
+            current_user_id=1,
+            task_id=1
+        )
+
+        return todo_service.create_todo(create_todo_request)
+
+    def test_send_status_as_completed_doesnt_return_none(self, team_repository:TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService):
+
+        self.register_login_user(auth_service)
+        self.a_task(team_repository=team_repository, task_repository=task_repository)
+        self.a_todo(todo_service=todo_service)
+
+        set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="tears@semicolon.com")
+
+        response = todo_service.send_status_as_completed(set_status_request)
+        assert not response is None
+
+    def test_send_status_for_a_valid_todo_status_is_now_pending(self, team_repository:TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService):
+        self.register_login_user(auth_service)
+        self.a_task(team_repository=team_repository, task_repository=task_repository)
+        todo = self.a_todo(todo_service=todo_service)
+
+        assert todo.progress == Status.IN_PROGRESS
+
+        set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="tears@semicolon.com")
+        response = todo_service.send_status_as_completed(set_status_request)
+
+
+        assert response.status == Status.PENDING
+        assert response.title is todo.title
+
 

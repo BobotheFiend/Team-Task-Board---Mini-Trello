@@ -2,14 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from app.schemas.models.enums.priority import Priority
-
-
-class CreateTodoRequest(BaseModel):
-    title: str
-    assigned_to: int
-    priority: Priority = Priority.MEDIUM
-    due_date: datetime | None = None
+from app.schemas.requests.create_todo_request import CreateTodoRequest
 
 
 class CreateTaskRequest(BaseModel):

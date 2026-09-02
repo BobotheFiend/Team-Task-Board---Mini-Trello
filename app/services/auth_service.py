@@ -27,6 +27,8 @@ class AuthService:
         found_member.is_active = False
         return self.repository.save(found_member)
 
+
+
     def validate(self, request:RegisterUserRequest):
         existing_member = self.repository.find_by_email(request.email)
         if existing_member is not None:
