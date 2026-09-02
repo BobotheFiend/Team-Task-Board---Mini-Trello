@@ -52,10 +52,6 @@ loginForm.addEventListener("submit", async function (event) {
             return;
         }
 
-        /*
-         * Save the logged-in user's information.
-         * We will need the user's ID later when creating tasks.
-         */
         localStorage.setItem(
             "currentUser",
             JSON.stringify(data)
