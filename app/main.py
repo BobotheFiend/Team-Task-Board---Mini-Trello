@@ -5,7 +5,7 @@ from app.config.settings import create_db_and_tables
 from app.controllers.auth_controller import router as auth_router
 from app.controllers import task_controller
 from app.controllers.team_controller import router as team_router
-
+from app.controllers.todo_controller import router as todo_router
 app = FastAPI(title="Team-Task-Board Mini-Trello")
 
 app.add_middleware(
@@ -23,3 +23,4 @@ def on_startup():
 app.include_router(auth_router)
 app.include_router(task_controller.router)
 app.include_router(team_router)
+app.include_router(todo_router)

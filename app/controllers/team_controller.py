@@ -1,3 +1,5 @@
+from typing import Annotated, Any
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.dependencies import get_team_service
@@ -9,8 +11,10 @@ from app.services.team_service import TeamService
 
 router = APIRouter()
 
+TeamServiceDep = Annotated[TeamService, Depends(get_team_service)]
+
 @router.post("/TeamCreation", response_model=Team)
-def create_team(request: CreateTeamRequest, team_service: TeamService = Depends(get_team_service)):
+def create_team(request: CreateTeamRequest, team_service: TeamServiceDep) -> Any:
     try:
         team = team_service.create_team(request)
     except TeamServiceException as err:
