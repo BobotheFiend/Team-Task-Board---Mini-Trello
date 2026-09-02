@@ -413,9 +413,6 @@ class TestTaskService:
         assert created_todo.assigned_to == team_member.id
         assert created_todo.task_id == created_task.id
 
-
-
-
     def test_view_task_successfully(
         self,
         task_service: TaskService,
@@ -423,30 +420,25 @@ class TestTaskService:
         team_repository: TeamRepository
     ):
 
-        # this is too find the team that our logged-in lead already belongs to
         team = team_repository.find_by_team_name(
             "CJ Development Team"
         )
 
-        # so this is too build the request we'll use to create a task
         create_request = CreateTaskRequest(
             title="Build Authentication System",
             team_id=team.id
         )
 
-        # so now this  actually create the task as the team lead
         created_task = task_service.create_task(
             create_request,
             logged_in_team_lead.id
         )
 
-        # So now we try to view that same task, as the same lead
         viewed_task = task_service.view_task(
             created_task.id,
             logged_in_team_lead.id
         )
 
-        # check we got back the exact same task
         assert viewed_task.id == created_task.id
         assert viewed_task.title == "Build Authentication System"
 
@@ -472,14 +464,10 @@ class TestTaskService:
             logged_in_team_lead.id
         )
 
-        # Manually log the lead out by flipping is_active to False,
-        # then saving that change back to the repository
         logged_in_team_lead.is_active = False
         team_member_repository.save(logged_in_team_lead)
 
-        # Now that they're logged out, viewing a task should raise an error
         expected_error_message = "User must be logged in"
-
         with pytest.raises(ValueError, match=expected_error_message):
             task_service.view_task(
                 created_task.id,
@@ -492,7 +480,6 @@ class TestTaskService:
         logged_in_team_lead: TeamMember
     ):
 
-        # We never created a task with this id, so it should not exist
         fake_task_id = 999
         expected_error_message = "Task not found"
 
@@ -524,7 +511,6 @@ class TestTaskService:
             logged_in_team_lead.id
         )
 
-        #  We register a brand new person who was never added to this team
         outsider_register_request = RegisterUserRequest(
             email="batmanyomi@gmail.com",
             name="BATMAN",
@@ -533,16 +519,12 @@ class TestTaskService:
         )
 
         outsider = auth_service.register(outsider_register_request)
-
-        # Log the outsider in so they pass the "must be logged in" check,
-        # but they should still fail the team-membership check
         outsider_login_request = LoginUserRequest(
             email="batmanyomi@gmail.com",
             password="password"
         )
 
         auth_service.login(outsider_login_request)
-
         expected_error_message = "You are not a member of this team"
 
         with pytest.raises(ValueError, match=expected_error_message):
