@@ -4,6 +4,7 @@ import datetime
 import pytest
 from sqlmodel import Session
 
+from app.exceptions.todo_service_exception import TodoServiceException
 from app.repositories.task_repository import TaskRepository
 from app.repositories.task_repository_impl import TaskRepositoryImpl
 from app.repositories.team_member_repository import TeamMemberRepository
@@ -427,3 +428,58 @@ class TestTodoService:
         assert response.title is todo.title
 
 
+    def test_send_status_fails_when_user_not_found(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService):
+        self.register_login_user(auth_service)
+        self.a_task(team_repository=team_repository, task_repository=task_repository)
+        self.a_todo(todo_service=todo_service)
+
+        set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="ghost@semicolon.com")
+
+        with pytest.raises(TodoServiceException):
+            todo_service.send_status_as_completed(set_status_request)
+
+    def test_send_status_fails_when_user_is_logged_out(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService):
+        self.logout(auth_service)
+        set_status_request = CompletedStatusRequest(todo_title="Nonexistent Todo Title", member_email="tears@semicolon.com")
+
+        with pytest.raises(TodoServiceException):
+            todo_service.send_status_as_completed(set_status_request)
+
+
+    def test_send_status_fails_when_todo_is_already_late(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService, todo_service_repository):
+        self.register_login_user(auth_service)
+        self.a_task(team_repository=team_repository, task_repository=task_repository)
+        todo = self.a_todo(todo_service=todo_service)
+
+        todo.progress = Status.LATE
+        todo_service_repository.save(todo)
+
+        set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="tears@semicolon.com")
+
+        with pytest.raises(TodoServiceException):
+            todo_service.send_status_as_completed(set_status_request)
+
+    def test_send_status_fails_when_todo_is_already_completed(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService, todo_service_repository):
+        self.register_login_user(auth_service)
+        self.a_task(team_repository=team_repository, task_repository=task_repository)
+        todo = self.a_todo(todo_service=todo_service)
+
+        todo.progress = Status.COMPLETED
+        todo_service_repository.save(todo)
+
+        set_status_request = CompletedStatusRequest(todo_title="Work On Create Services",member_email="tears@semicolon.com")
+
+        with pytest.raises(TodoServiceException):
+            todo_service.send_status_as_completed(set_status_request)
+
+    def test_send_status_fails_when_todo_is_already_pending_review(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService, todo_service_repository):
+        self.register_login_user(auth_service)
+        self.a_task(team_repository=team_repository, task_repository=task_repository)
+        todo = self.a_todo(todo_service=todo_service)
+
+        set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="tears@semicolon.com")
+
+        todo_service.send_status_as_completed(set_status_request)
+
+        with pytest.raises(TodoServiceException):
+            todo_service.send_status_as_completed(set_status_request)

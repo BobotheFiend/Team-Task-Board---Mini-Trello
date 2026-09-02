@@ -79,14 +79,8 @@ class TodoService:
         return self.todo_repository.save(todo)
 
 
-    def send_status_as_completed(self, request:CompletedStatusRequest) -> CompletedStatusResponse | str:
-        found_user = self.team_member_repository.find_by_email(request.member_email)
-        if found_user is None:
-            raise TodoServiceException("User not found !")
-
-        if not found_user.is_active:
-            raise TodoServiceException("User Is Not Logged In !")
-
+    def send_status_as_completed(self, request:CompletedStatusRequest) -> CompletedStatusResponse:
+        self.validate_user(request)
 
         found_todo = self.todo_repository.find_by_todo_title(request.todo_title)
         if found_todo is None:
@@ -103,6 +97,13 @@ class TodoService:
         self.todo_repository.save(found_todo)
 
         response = CompletedStatusResponse(title=found_todo.title, status=found_todo.progress)
-        response.message = f"Your Request for {response.title} to be reviewed has been sent Successfully!\nDate: {response.timestamp}\nYour Progress Is Now: {response.status}"
         return response
 
+
+    def validate_user(self, request: CompletedStatusRequest):
+        found_user = self.team_member_repository.find_by_email(request.member_email)
+        if found_user is None:
+            raise TodoServiceException("User not found !")
+
+        if not found_user.is_active:
+            raise TodoServiceException("User Is Not Logged In !")
