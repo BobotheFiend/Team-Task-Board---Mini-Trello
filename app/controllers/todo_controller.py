@@ -19,6 +19,7 @@ TodoServiceDep = Annotated[TodoService, Depends(get_todo_service)]
 def create_todo(request: CreateTodoRequest, todo_service: TodoServiceDep) -> Any:
     try:
         todo_to_create = todo_service.create_todo(request)
+        
     except TodoServiceException as err:
         raise HTTPException(status_code=400, detail=str(err))
     return todo_to_create
