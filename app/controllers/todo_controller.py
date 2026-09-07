@@ -29,7 +29,7 @@ def create_todo(request: CreateTodoRequest, todo_service: TodoServiceDep) -> Any
 @router.post("/changeStatus", response_model=None)
 def change_status(request: CompletedStatusRequest, todo_service: TodoServiceDep) -> Any:
     try:
-        send_status =  todo_service.send_status_as_completed(request)
+        send_status =  todo_service.request_completion_review(request)
 
     except TodoServiceException as err:
         raise HTTPException(status_code=400, detail=str(err))

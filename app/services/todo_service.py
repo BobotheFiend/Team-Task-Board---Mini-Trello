@@ -78,17 +78,26 @@ class TodoService:
 
         return self.todo_repository.save(todo)
 
+    def request_completion_review(
+            self,
+            request: CompletedStatusRequest
+    ) -> CompletedStatusResponse:
 
-    def send_status_as_completed(self, request:CompletedStatusRequest) -> CompletedStatusResponse:
         self.validate_user(request)
 
-        found_todo = self.todo_repository.find_by_todo_title(request.todo_title)
+        found_todo = self.todo_repository.find_by_todo_title(
+            request.todo_title
+        )
+
         if found_todo is None:
             raise TodoServiceException("Todo Does Not Exist")
+
         if found_todo.progress == Status.LATE:
             raise TodoServiceException("Todo is Already Late!")
+
         if found_todo.progress == Status.COMPLETED:
             raise TodoServiceException("Todo Already Completed")
+
         if found_todo.progress == Status.PENDING:
             raise TodoServiceException("Todo UnderGoing Review!")
 
@@ -96,9 +105,12 @@ class TodoService:
 
         self.todo_repository.save(found_todo)
 
-        response = CompletedStatusResponse(title=found_todo.title, status=found_todo.progress)
-        return response
+        response = CompletedStatusResponse(
+            title=found_todo.title,
+            status=found_todo.progress
+        )
 
+        return response
 
     def validate_user(self, request: CompletedStatusRequest):
         found_user = self.team_member_repository.find_by_email(request.member_email)
@@ -107,3 +119,58 @@ class TodoService:
 
         if not found_user.is_active:
             raise TodoServiceException("User Is Not Logged In !")
+
+
+    def review_completion(
+        self,
+        todo_title: str,
+        team_lead_email: str,
+        approved: bool
+    ) -> CompletedStatusResponse:
+
+        team_lead = self.team_member_repository.find_by_email(
+            team_lead_email
+        )
+
+        if team_lead is None:
+            raise TodoServiceException("Team lead not found")
+
+        if not team_lead.is_active:
+            raise TodoServiceException("Team Lead Is Not Logged In!")
+
+        found_todo = self.todo_repository.find_by_todo_title(todo_title)
+
+        if found_todo is None:
+            raise TodoServiceException("Todo Does Not Exist")
+
+        task = self.task_repository.find_by_id(found_todo.task_id)
+
+        if task is None:
+            raise TodoServiceException("Task Does Not Exist")
+
+        team = self.team_repository.find_by_id(task.team_id)
+
+        if team is None:
+            raise TodoServiceException("Team Does Not Exist")
+
+        if team.lead != team_lead.id:
+            raise TodoServiceException(
+                "Only the team lead can review completed todos"
+            )
+
+        if found_todo.progress != Status.PENDING:
+            raise TodoServiceException(
+                "Todo is not waiting for review"
+            )
+
+        if approved:
+            found_todo.progress = Status.COMPLETED
+        else:
+            found_todo.progress = Status.IN_PROGRESS
+
+        self.todo_repository.save(found_todo)
+
+        return CompletedStatusResponse(
+            title=found_todo.title,
+            status=found_todo.progress
+        )

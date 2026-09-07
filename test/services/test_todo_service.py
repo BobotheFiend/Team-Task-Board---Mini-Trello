@@ -26,6 +26,7 @@ from app.schemas.requests.register_user_request import RegisterUserRequest
 
 from app.services.auth_service import AuthService
 from app.services.todo_service import TodoService
+from app.schemas.requests.logout_user_request import LogoutUserRequest
 
 
 class TestTodoService:
@@ -419,7 +420,7 @@ class TestTodoService:
 
         set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="tears@semicolon.com")
 
-        response = todo_service.send_status_as_completed(set_status_request)
+        response = todo_service.request_completion_review(set_status_request)
         assert not response is None
 
     def test_send_status_for_a_valid_todo_status_is_now_pending(self, team_repository:TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService):
@@ -430,7 +431,7 @@ class TestTodoService:
         assert todo.progress == Status.IN_PROGRESS
 
         set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="tears@semicolon.com")
-        response = todo_service.send_status_as_completed(set_status_request)
+        response = todo_service.request_completion_review(set_status_request)
 
 
         assert response.status == Status.PENDING
@@ -445,14 +446,14 @@ class TestTodoService:
         set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="ghost@semicolon.com")
 
         with pytest.raises(TodoServiceException):
-            todo_service.send_status_as_completed(set_status_request)
+            todo_service.request_completion_review(set_status_request)
 
     def test_send_status_fails_when_user_is_logged_out(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService):
         self.logout(auth_service)
         set_status_request = CompletedStatusRequest(todo_title="Nonexistent Todo Title", member_email="tears@semicolon.com")
 
         with pytest.raises(TodoServiceException):
-            todo_service.send_status_as_completed(set_status_request)
+            todo_service.request_completion_review(set_status_request)
 
 
     def test_send_status_fails_when_todo_is_already_late(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService, todo_service_repository):
@@ -466,7 +467,7 @@ class TestTodoService:
         set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="tears@semicolon.com")
 
         with pytest.raises(TodoServiceException):
-            todo_service.send_status_as_completed(set_status_request)
+            todo_service.request_completion_review(set_status_request)
 
     def test_send_status_fails_when_todo_is_already_completed(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService, todo_service_repository):
         self.register_login_user(auth_service)
@@ -479,7 +480,7 @@ class TestTodoService:
         set_status_request = CompletedStatusRequest(todo_title="Work On Create Services",member_email="tears@semicolon.com")
 
         with pytest.raises(TodoServiceException):
-            todo_service.send_status_as_completed(set_status_request)
+            todo_service.request_completion_review(set_status_request)
 
     def test_send_status_fails_when_todo_is_already_pending_review(self, team_repository: TeamRepository, task_repository: TaskRepository, todo_service: TodoService, auth_service: AuthService, todo_service_repository):
         self.register_login_user(auth_service)
@@ -488,7 +489,128 @@ class TestTodoService:
 
         set_status_request = CompletedStatusRequest(todo_title="Work On Create Services", member_email="tears@semicolon.com")
 
-        todo_service.send_status_as_completed(set_status_request)
+        todo_service.request_completion_review(set_status_request)
 
         with pytest.raises(TodoServiceException):
-            todo_service.send_status_as_completed(set_status_request)
+            todo_service.request_completion_review(set_status_request)
+
+    # ---------------------- Tests for Review Completion -------------------------
+
+    def test_review_completion_returns_response(
+            self,
+            team_repository: TeamRepository,
+            task_repository: TaskRepository,
+            todo_service: TodoService,
+            auth_service: AuthService
+    ):
+        self.register_login_user(auth_service)
+        self.a_task(
+            team_repository=team_repository,
+            task_repository=task_repository
+        )
+        self.a_todo(todo_service=todo_service)
+
+        # First request completion review
+        request = CompletedStatusRequest(
+            todo_title="Work On Create Services",
+            member_email="tears@semicolon.com"
+        )
+
+        todo_service.request_completion_review(request)
+
+        # Team lead reviews and approves
+        response = todo_service.review_completion(
+            todo_title="Work On Create Services",
+            team_lead_email="tears@semicolon.com",
+            approved=True
+        )
+
+        assert response is not None
+        assert response.title == "Work On Create Services"
+        assert response.status == Status.COMPLETED
+
+
+    def test_review_completion_approved_changes_status_to_completed(
+        self,
+        team_repository: TeamRepository,
+        task_repository: TaskRepository,
+        todo_service: TodoService,
+        auth_service: AuthService,
+        todo_service_repository: TodoRepository
+    ):
+        self.register_login_user(auth_service)
+        self.a_task(
+            team_repository=team_repository,
+            task_repository=task_repository
+        )
+
+        todo = self.a_todo(todo_service=todo_service)
+
+        request = CompletedStatusRequest(
+            todo_title="Work On Create Services",
+            member_email="tears@semicolon.com"
+        )
+
+        todo_service.request_completion_review(request)
+
+        response = todo_service.review_completion(
+            todo_title="Work On Create Services",
+            team_lead_email="tears@semicolon.com",
+            approved=True
+        )
+
+        assert response.status == Status.COMPLETED
+
+        updated_todo = todo_service_repository.find_by_id(todo.id)
+
+        assert updated_todo.progress == Status.COMPLETED
+
+    def test_review_completion_rejected_changes_status_to_in_progress(
+        self,
+        team_repository: TeamRepository,
+        task_repository: TaskRepository,
+        todo_service: TodoService,
+        auth_service: AuthService,
+        todo_service_repository: TodoRepository
+    ):
+        self.register_login_user(auth_service)
+        self.a_task(
+            team_repository=team_repository,
+            task_repository=task_repository
+        )
+
+        todo = self.a_todo(todo_service=todo_service)
+
+        request = CompletedStatusRequest(
+            todo_title="Work On Create Services",
+            member_email="tears@semicolon.com"
+        )
+
+        todo_service.request_completion_review(request)
+
+        response = todo_service.review_completion(
+            todo_title="Work On Create Services",
+            team_lead_email="tears@semicolon.com",
+            approved=False
+        )
+
+        assert response.status == Status.IN_PROGRESS
+
+        updated_todo = todo_service_repository.find_by_id(todo.id)
+
+        assert updated_todo.progress == Status.IN_PROGRESS
+
+    def test_review_completion_fails_when_team_lead_does_not_exist(
+        self,
+        todo_service: TodoService
+    ):
+        with pytest.raises(
+            TodoServiceException,
+            match="Team lead not found"
+        ):
+            todo_service.review_completion(
+                todo_title="Work On Create Services",
+                team_lead_email="ghost@semicolon.com",
+                approved=True
+            )
+

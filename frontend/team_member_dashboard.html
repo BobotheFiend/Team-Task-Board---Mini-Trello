@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Team Member Dashboard - TaskBoard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <h1>TaskBoard</h1>
+        </div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="team-member-dashboard.html"
+               class="nav-link active">
+                Dashboard
+            </a>
+
+            <a href="#" class="nav-link">
+                My Tasks
+            </a>
+
+            <a href="#" class="nav-link">
+                My Todos
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="#" id="logout-button"
+               class="nav-link logout-link">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h2>Dashboard</h2>
+
+                <p>
+                    Manage your tasks and track your progress.
+                </p>
+            </div>
+
+
+            <div class="user-info">
+
+                <div>
+                    <strong id="user-name">
+                        User
+                    </strong>
+
+                    <span>
+                        Team Member
+                    </span>
+                </div>
+
+                <div class="user-avatar" id="user-avatar">
+                    U
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Dashboard Content -->
+        <section class="dashboard-content">
+
+            <div class="dashboard-title-row">
+
+                <div>
+                    <h3>
+                        Welcome back, <span id="welcome-name">User</span> 👋
+                    </h3>
+
+                    <p>
+                        Here's what's happening with your work.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Statistics -->
+            <div class="dashboard-stats">
+
+                <div class="stat-card">
+                    <span class="stat-label">
+                        My Todos
+                    </span>
+
+                    <strong id="total-todos">
+                        0
+                    </strong>
+                </div>
+
+
+                <div class="stat-card">
+                    <span class="stat-label">
+                        In Progress
+                    </span>
+
+                    <strong id="in-progress-todos">
+                        0
+                    </strong>
+                </div>
+
+
+                <div class="stat-card">
+                    <span class="stat-label">
+                        Pending Review
+                    </span>
+
+                    <strong id="pending-todos">
+                        0
+                    </strong>
+                </div>
+
+
+                <div class="stat-card">
+                    <span class="stat-label">
+                        Completed
+                    </span>
+
+                    <strong id="completed-todos">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <!-- Todos -->
+            <div class="section-heading">
+
+                <div>
+                    <h3>My Todos</h3>
+
+                    <p>
+                        Tasks assigned to you by your team lead.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="todo-list">
+
+                <!-- Placeholder Todo -->
+                <div class="todo-card">
+
+                    <div class="todo-card-header">
+
+                        <div>
+                            <h4>Build Login Service</h4>
+
+                            <p>
+                                Authentication System
+                            </p>
+                        </div>
+
+                        <span class="status-badge status-progress">
+                            IN PROGRESS
+                        </span>
+
+                    </div>
+
+
+                    <div class="todo-card-details">
+
+                        <span>
+                            Priority: <strong>HIGH</strong>
+                        </span>
+
+                        <span>
+                            Due: Sept 10, 8:30 PM
+                        </span>
+
+                    </div>
+
+
+                    <div class="todo-card-footer">
+
+                        <span class="assigned-label">
+                            Assigned to you
+                        </span>
+
+                        <button
+                            class="secondary-button review-button"
+                            type="button"
+                        >
+                            Request Review
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Another Placeholder Todo -->
+                <div class="todo-card">
+
+                    <div class="todo-card-header">
+
+                        <div>
+                            <h4>Implement User Registration</h4>
+
+                            <p>
+                                Authentication System
+                            </p>
+                        </div>
+
+                        <span class="status-badge status-pending">
+                            PENDING
+                        </span>
+
+                    </div>
+
+
+                    <div class="todo-card-details">
+
+                        <span>
+                            Priority: <strong>MEDIUM</strong>
+                        </span>
+
+                        <span>
+                            Due: Sept 12, 6:00 PM
+                        </span>
+
+                    </div>
+
+
+                    <div class="todo-card-footer">
+
+                        <span class="assigned-label">
+                            Awaiting team lead review
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="team-member-dashboard.js"></script>
+
+</body>
+</html>
