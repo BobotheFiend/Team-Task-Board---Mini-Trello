@@ -12,7 +12,7 @@ if (currentUser === null) {
 
 if (currentUser.role !== "MEMBER") {
 
-    window.location.href = "team-lead-dashboard.html";
+    window.location.href = "team_lead_dashboard.html";
 
 }
 

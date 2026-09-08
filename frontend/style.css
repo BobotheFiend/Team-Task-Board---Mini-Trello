@@ -616,4 +616,302 @@ body {
 
 }
 
+/* ================================
+   TEAM LEAD DASHBOARD
+   ================================ */
+
+.dashboard-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.dashboard-action-button {
+    width: auto;
+    padding: 11px 18px;
+}
+
+
+/* ================================
+   TEAM MEMBERS
+   ================================ */
+
+.team-member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.team-member-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 18px 20px;
+
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+
+    align-items: center;
+    gap: 20px;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.team-member-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.team-member-info h4 {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.team-member-info p {
+    color: #777;
+    font-size: 12px;
+}
+
+.member-avatar {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background-color: #222;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.member-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.member-stat span {
+    color: #777;
+    font-size: 11px;
+}
+
+.member-stat strong {
+    font-size: 16px;
+}
+
+
+/* ================================
+   LEAD TASKS
+   ================================ */
+
+.dashboard-section-spacing {
+    margin-top: 35px;
+}
+
+.lead-task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lead-task-card {
+    background-color: white;
+    border-radius: 8px;
+
+    padding: 18px 20px;
+
+    display: grid;
+    grid-template-columns: 2fr 1.2fr auto auto;
+
+    align-items: center;
+    gap: 20px;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.lead-task-card h4 {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.lead-task-card p {
+    color: #777;
+    font-size: 12px;
+}
+
+.lead-task-member {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lead-task-member span {
+    color: #777;
+    font-size: 11px;
+}
+
+.lead-task-member strong {
+    font-size: 13px;
+}
+
+
+/* ================================
+   REVIEW REQUESTS
+   ================================ */
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.review-card {
+    background-color: white;
+    border-radius: 8px;
+
+    padding: 18px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.review-card h4 {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.review-card p {
+    color: #777;
+    font-size: 12px;
+}
+
+.review-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.approve-button {
+    border-color: #222;
+}
+
+.reject-button {
+    color: #777;
+    border-color: #ccc;
+}
+
+.reject-button:hover {
+    background-color: #f4f4f4;
+    color: #222;
+}
+
+
+/* ================================
+   EMPTY STATE
+   ================================ */
+
+.empty-state {
+    background-color: white;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+}
+
+
+/* ================================
+   TEAM LEAD MOBILE
+   ================================ */
+
+@media (max-width: 1000px) {
+
+    .team-member-card {
+        grid-template-columns: 2fr 1fr 1fr;
+    }
+
+    .member-status {
+        grid-column: 3;
+    }
+
+    .lead-task-card {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .dashboard-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dashboard-action-button {
+        width: 100%;
+    }
+
+    .team-member-card {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .team-member-info {
+        grid-column: 1 / -1;
+    }
+
+    .member-status {
+        grid-column: auto;
+    }
+
+    .lead-task-card {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .review-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .review-actions {
+        width: 100%;
+    }
+
+    .review-actions button {
+        flex: 1;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .dashboard-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .team-member-card {
+        grid-template-columns: 1fr;
+    }
+
+    .member-status {
+        grid-column: auto;
+    }
+
+}
+
+
 

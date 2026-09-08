@@ -61,7 +61,7 @@ loginForm.addEventListener("submit", async function (event) {
 
         if (data.role === "Lead") {
 
-            window.location.href = "team-lead-dashboard.html";
+            window.location.href = "team_lead_dashboard.html";
 
         } else if (data.role === "Member") {
 

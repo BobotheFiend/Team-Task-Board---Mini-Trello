@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Team Lead Dashboard - TaskBoard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <h1>TaskBoard</h1>
+        </div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="team_lead_dashboard.html"
+               class="nav-link active">
+                Dashboard
+            </a>
+
+            <a href="#" class="nav-link">
+                My Tasks
+            </a>
+
+            <a href="#" class="nav-link">
+                Team Members
+            </a>
+
+            <a href="#" class="nav-link">
+                Tasks
+            </a>
+
+            <a href="#" class="nav-link">
+                Todos
+            </a>
+
+            <a href="#" class="nav-link">
+                Review Requests
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="#"
+               id="logout-button"
+               class="nav-link logout-link">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+
+            <div>
+                <h2>Team Lead Dashboard</h2>
+
+                <p>
+                    Manage your team, tasks and progress.
+                </p>
+            </div>
+
+
+            <div class="user-info">
+
+                <div>
+                    <strong id="user-name">
+                        User
+                    </strong>
+
+                    <span>
+                        Team Lead
+                    </span>
+                </div>
+
+                <div class="user-avatar" id="user-avatar">
+                    U
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Dashboard Content -->
+        <section class="dashboard-content">
+
+            <div class="dashboard-title-row">
+
+                <div>
+                    <h3>
+                        Welcome back,
+                        <span id="welcome-name">User</span>
+                    </h3>
+
+                    <p>
+                        Here's what's happening with your team.
+                    </p>
+                </div>
+
+
+                <div class="dashboard-actions">
+
+                    <button
+                        type="button"
+                        class="primary-button dashboard-action-button"
+                        id="create-task-button">
+                        Create Task
+                    </button>
+
+                    <button
+                        type="button"
+                        class="secondary-button dashboard-action-button"
+                        id="create-todo-button">
+                        Create Todo
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Statistics -->
+            <div class="dashboard-stats">
+
+                <div class="stat-card">
+                    <span class="stat-label">
+                        Team Members
+                    </span>
+
+                    <strong id="total-members">
+                        0
+                    </strong>
+                </div>
+
+
+                <div class="stat-card">
+                    <span class="stat-label">
+                        Total Tasks
+                    </span>
+
+                    <strong id="total-tasks">
+                        0
+                    </strong>
+                </div>
+
+
+                <div class="stat-card">
+                    <span class="stat-label">
+                        In Progress
+                    </span>
+
+                    <strong id="in-progress-tasks">
+                        0
+                    </strong>
+                </div>
+
+
+                <div class="stat-card">
+                    <span class="stat-label">
+                        Pending Reviews
+                    </span>
+
+                    <strong id="pending-reviews">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <!-- Team Overview -->
+            <div class="section-heading">
+
+                <div>
+                    <h3>Team Overview</h3>
+
+                    <p>
+                        Monitor your team's current workload.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="team-member-list">
+
+                <!-- Team Member -->
+                <div class="team-member-card">
+
+                    <div class="team-member-info">
+
+                        <div class="member-avatar">
+                            JD
+                        </div>
+
+                        <div>
+                            <h4>John Doe</h4>
+
+                            <p>
+                                john@example.com
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="member-stat">
+                        <span>Tasks</span>
+                        <strong>5</strong>
+                    </div>
+
+
+                    <div class="member-stat">
+                        <span>Completed</span>
+                        <strong>3</strong>
+                    </div>
+
+
+                    <div class="member-status">
+                        <span class="status-badge status-progress">
+                            ACTIVE
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <!-- Team Member -->
+                <div class="team-member-card">
+
+                    <div class="team-member-info">
+
+                        <div class="member-avatar">
+                            AS
+                        </div>
+
+                        <div>
+                            <h4>Alice Smith</h4>
+
+                            <p>
+                                alice@example.com
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="member-stat">
+                        <span>Tasks</span>
+                        <strong>4</strong>
+                    </div>
+
+
+                    <div class="member-stat">
+                        <span>Completed</span>
+                        <strong>2</strong>
+                    </div>
+
+
+                    <div class="member-status">
+                        <span class="status-badge status-progress">
+                            ACTIVE
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <!-- Empty state -->
+                <div
+                    class="empty-state"
+                    id="no-members-message"
+                    style="display: none;">
+
+                    <p>
+                        No team members found.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Recent Tasks -->
+            <div class="section-heading dashboard-section-spacing">
+
+                <div>
+                    <h3>Recent Tasks</h3>
+
+                    <p>
+                        Tasks currently assigned to your team.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="lead-task-list">
+
+                <div class="lead-task-card">
+
+                    <div>
+                        <h4>Build Login Service</h4>
+
+                        <p>
+                            Authentication System
+                        </p>
+                    </div>
+
+                    <div class="lead-task-member">
+                        <span>Assigned to</span>
+                        <strong>John Doe</strong>
+                    </div>
+
+                    <span class="status-badge status-progress">
+                        IN PROGRESS
+                    </span>
+
+                    <span class="task-due-date">
+                        Due: Sept 10, 8:30 PM
+                    </span>
+
+                </div>
+
+
+                <div class="lead-task-card">
+
+                    <div>
+                        <h4>Implement User Registration</h4>
+
+                        <p>
+                            Authentication System
+                        </p>
+                    </div>
+
+                    <div class="lead-task-member">
+                        <span>Assigned to</span>
+                        <strong>Alice Smith</strong>
+                    </div>
+
+                    <span class="status-badge status-pending">
+                        PENDING
+                    </span>
+
+                    <span class="task-due-date">
+                        Due: Sept 12, 6:00 PM
+                    </span>
+
+                </div>
+
+
+                <div class="lead-task-card">
+
+                    <div>
+                        <h4>Design Dashboard</h4>
+
+                        <p>
+                            Frontend Development
+                        </p>
+                    </div>
+
+                    <div class="lead-task-member">
+                        <span>Assigned to</span>
+                        <strong>John Doe</strong>
+                    </div>
+
+                    <span class="status-badge status-completed">
+                        COMPLETED
+                    </span>
+
+                    <span class="task-due-date">
+                        Completed: Sept 7
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Review Requests -->
+            <div class="section-heading dashboard-section-spacing">
+
+                <div>
+                    <h3>Pending Review Requests</h3>
+
+                    <p>
+                        Team members waiting for their completed todos to be reviewed.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="review-list">
+
+                <div class="review-card">
+
+                    <div>
+                        <h4>
+                            Build Login Service
+                        </h4>
+
+                        <p>
+                            Requested by John Doe
+                        </p>
+                    </div>
+
+                    <div class="review-actions">
+
+                        <button
+                            type="button"
+                            class="secondary-button approve-button">
+                            Approve
+                        </button>
+
+                        <button
+                            type="button"
+                            class="secondary-button reject-button">
+                            Reject
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="empty-state"
+                    id="no-reviews-message"
+                    style="display: none;">
+
+                    <p>
+                        No pending review requests.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="team_lead_dashboard.js"></script>
+
+</body>
+</html>
