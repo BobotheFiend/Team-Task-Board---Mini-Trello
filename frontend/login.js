@@ -59,13 +59,13 @@ loginForm.addEventListener("submit", async function (event) {
 
         loginMessage.textContent = "Login successful!";
 
-        if (data.role === "LEAD") {
+        if (data.role === "Lead") {
 
             window.location.href = "team-lead-dashboard.html";
 
-        } else if (data.role === "MEMBER") {
+        } else if (data.role === "Member") {
 
-             window.location.href = "team-member-dashboard.html";
+             window.location.href = "team_member_dashboard.html";
 
 }
 
