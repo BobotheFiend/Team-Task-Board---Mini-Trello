@@ -17,8 +17,6 @@ if (currentUser.role !== "Member") {
 }
 
 
-/* Display user information */
-
 document.getElementById("user-name").textContent =
     currentUser.name;
 
@@ -26,13 +24,10 @@ document.getElementById("welcome-name").textContent =
     currentUser.name;
 
 
-/* Create avatar from first letter */
-
 document.getElementById("user-avatar").textContent =
     currentUser.name.charAt(0).toUpperCase();
 
 
-/* Logout */
 
 document.getElementById("logout-button")
     .addEventListener("click", async function (event) {
